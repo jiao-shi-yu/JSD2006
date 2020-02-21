@@ -8,3 +8,33 @@
   - SQLServer: 微软公司产品，闭源。主要应用于微软的整体解决方案中。
   - DB2: IBM公司产品，用在IBM整体解决方案中。
 + 网站整体解决方案： 开发语言 + 操作系统 + web服务软件 + 数据库语言
+
+## SQL语言
+- Structured Query Language: 结构化查询语言，用于程序员和DBMS进行交流
+- 如何连接数据库软件
+## 使用MySql
+
+### 配置MySql环境变量
+```
+# 创建一个文件
+sudo touch /etc/paths.d/mysql
+# 用vim编辑这个文件
+sudo vim /etc/paths.d/mysql
+# paths.d路径下mysql文件中的内容是/usr/local/mysql/bin
+/usr/local/mysql/bin
+# source相应文件
+source /etc/paths.d/mysql
+```
+- 退出连接： 关闭窗口或`exit;`
+- 先建库，再建表，表里存数据
+
+## 数据库相关SQL
++ 查看所有数据库
+```
+show databases;
+```
+
+## 表相关SQL
+
+
+## 数据相关SQL
