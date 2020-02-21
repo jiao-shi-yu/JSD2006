@@ -34,7 +34,7 @@ create database db3 character set gbk;
 ```
 + 查看表详情
 ```
-show create database;
+show create database db1;
 ```
 + 删除数据库
 ```
