@@ -26,8 +26,41 @@ mysql -u root -p
 ```
 show databases;
 ```
++ 创建数据库
+```
+create database db1;
+create database db2 character set utf8;
+create database db3 character set gbk;
+```
++ 查看表详情
+```
+show create database;
+```
++ 删除数据库
+```
+drop database db1;
+```
++ 使用数据库
+```
+use db2;
+```  
 
-## 表相关SQL
-
-
-## 数据相关SQL
+## 表相关数据库
+执行表相关的SQL语句，必须先创建并使用一个数据库。
+```
+create database db1 character set utf8;
+use db1;
+```
++ 创建表
+```
+create table t1(name varchar(3), age int) charset=utf8;
+create table t2(name varchar(10), sal int);
+```
++ 查询所有表
+```
+show tables;
+```
++ 查看表详情
+```
+show create table t1;
+```
