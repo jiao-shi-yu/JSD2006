@@ -4,6 +4,7 @@
 + DBMS: DataBaseManagementSystem, 数据库管理软件。包括：MySql, Oracle, DB2, SQLServer等
 + 常见DBMS介绍：
   - MySQL: Oracle公司产品， 08年被Sun公司收购， 09年Sun公司被Oracle收购。MySQL是个开源软件。
-  - 
+  - Oracle: Oracle公司产品，性能最高，价格最贵，市场占有率第二。
+  - SQLServer: 微软公司产品，闭源。主要应用于微软的整体解决方案中。
   
 + 网站整体解决方案： 开发语言 + 操作系统 + web服务软件 + 数据库语言
