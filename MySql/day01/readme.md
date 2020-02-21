@@ -11,22 +11,10 @@
 
 ## SQL语言
 - Structured Query Language: 结构化查询语言，用于程序员和DBMS进行交流
-- 如何连接数据库软件
+- 如何连接数据库软件  
+
 ## 使用MySql
 
-### 配置MySql环境变量
-```
-# 创建一个文件
-sudo touch /etc/paths.d/mysql
-# 用vim编辑这个文件
-sudo vim /etc/paths.d/mysql
-# paths.d路径下mysql文件中的内容是/usr/local/mysql/bin
-/usr/local/mysql/bin
-# source相应文件
-source /etc/paths.d/mysql
-```
-- 退出连接： 关闭窗口或`exit;`
-- 先建库，再建表，表里存数据
 
 ## 数据库相关SQL
 + 查看所有数据库
