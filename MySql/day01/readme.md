@@ -43,8 +43,7 @@ drop database db1;
 + 使用数据库
 ```
 use db2;
-```  
-
+```
 ## 表相关数据库
 执行表相关的SQL语句，必须先创建并使用一个数据库。
 ```
@@ -63,4 +62,8 @@ show tables;
 + 查看表详情
 ```
 show create table t1;
+```
++ 查看表字段
+```
+desc t1;
 ```
