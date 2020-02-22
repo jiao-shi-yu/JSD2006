@@ -65,5 +65,19 @@ show create table t1;
 ```
 + 查看表字段
 ```
-desc t1;
+DESC t1;
 ```
++ 删除表
+```
+drop table t2;
+```
++ 修改表名
+```
+rename table t1 to person;
+```
++ 添加表字段
+```
+ALTER TABLE person ADD gender varchar(10); # 添加在最后面
+ALTER TABLE person ADD id int first;
+```
++
