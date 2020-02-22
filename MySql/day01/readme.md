@@ -24,25 +24,25 @@ mysql -u root -p
 ## 数据库相关SQL
 + 查看所有数据库
 ```
-show databases;
+SHOW DATABASES;
 ```
 + 创建数据库
 ```
-create database db1;
-create database db2 character set utf8;
-create database db3 character set gbk;
+CREATE DATABASE db1;
+CREATE DATABASE db2 CHARACTER SET utf8;
+CREATE DATABASE db3 CHARACTER SET gbk;
 ```
 + 查看表详情
 ```
-show create database db1;
+SHOW CREATE DATABASE db1;
 ```
 + 删除数据库
 ```
-drop database db1;
+DROP DATABASE db1;
 ```
 + 使用数据库
 ```
-use db2;
+USE db2;
 ```
 
 ## 表相关SQL
@@ -53,16 +53,16 @@ use db1;
 ```
 + 创建表
 ```
-create table t1(name varchar(3), age int) charset=utf8;
-create table t2(name varchar(10), sal int);
+CREATE TABLE t1(name varchar(3), age int) CHARSET=UTF8;
+CREATE TABLE t2(name varchar(10), sal int);
 ```
 + 查询所有表
 ```
-show tables;
+SHOW TABLES;
 ```
 + 查看表详情
 ```
-show create table t1;
+SHOW CREATE TABLE t1;
 ```
 + 查看表字段
 ```
@@ -70,11 +70,11 @@ DESC t1;
 ```
 + 删除表
 ```
-drop table t2;
+DROP TABLE t2;
 ```
 + 修改表名
 ```
-rename table t1 to person;
+RENAME TABLE t1 TO person;
 ```
 + 添加表字段
 ```
@@ -94,4 +94,46 @@ ALTER TABLE person CHANGE age id int;
 
 ## 数据相关SQL
 必需使用了某一个数据库，并有对应的表。
+```
+CREATE DATABASE mydb1;
+USE mydb1;
+CRAETE TABLE person(name varchar(10), age int) charset=utf8;
+```
++ 插入数据：
+```
+INSERT INTO person VALUES('Tom', 18);
+INSERT INTO person(name) VALUES('Jerry');
+INSERT INTO person VALUES('Lucy', 58), ('Lily', 59);
+INSERT INTO person(name) VALUES('LiLei'),('HanMeimei');
+```
+`set names gbk`解决中文问题。
+
++ 查询数据
+```
+SELECT * FROM person;    # 查询表中所有数据
+SELECT name FROM person; # 查询表中的名字
+SELECT * FROM person WHERE age > 50; # 查询特定条件
+```
+
++ 修改数据
+```
+UPDATE 表名 SET 字段名=新值；
+UPDATE person SET age=59 WHERE age = 60;
+UPDATE person SET age = 20 
+WHERE age is null;
+```
+
++ 删除数据
+```
+DELETE FROM person WHERE age = 20;
+DELETE FROM person WHERE name='Tom';
+DELETE FROM person;
+```
+
+
+
+
+
+
+
 
