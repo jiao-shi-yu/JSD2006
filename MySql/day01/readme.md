@@ -44,7 +44,8 @@ drop database db1;
 ```
 use db2;
 ```
-## 表相关数据库
+
+## 表相关SQL
 执行表相关的SQL语句，必须先创建并使用一个数据库。
 ```
 create database db1 character set utf8;
@@ -79,5 +80,18 @@ rename table t1 to person;
 ```
 ALTER TABLE person ADD gender varchar(10); # 添加在最后面
 ALTER TABLE person ADD id int first;
+ALTER TABLE person ADD salary int AFTER name;
 ```
-+
++ 删除表字段
+```
+ALTER TABLE person DROP id;
+```
++ 修改表字段
+```
+ALTER TABLE person CHANGE salary sal int;
+ALTER TABLE person CHANGE age id int;
+```
+
+## 数据相关SQL
+必需使用了某一个数据库，并有对应的表。
+
