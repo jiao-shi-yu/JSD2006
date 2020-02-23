@@ -73,6 +73,64 @@ VALUES (null, 'eee');
 
 - 自增规则：从*历史最大值*+1
 
+# 导入`.sql`文件
+    source /Users/yuyu/Documents/emp.sql;
+
+# `is null`和`is not null`
+1. 查询 没有上级领导 的员工信息
+```
+SELECT * FROM emp
+WHERE mgr is NULL;
+```
+2. 查询 有上级领导的 员工姓名
+```
+SELECT ename FROM emp
+WHERE mgr IS NOT NULL;
+```
+
+
+### 比较运算符 > < >= <= != <>
+1. 查询 工资小于等于3000的员工姓名和工资
+```
+SELECT ename, sal FROM emp
+WHERE sal <= 3000;
+```
+2. 查询工作不是程序员的员工姓名和工作
+```
+SELECT ename, job FROM emp
+WHERE job <> "程序员";
+```
+
+### BETWEEN X AND Y 包含x和y
+1. 查询工资在2000到3000之间的员工姓名和工资
+```
+SELECT ename, sal FROM emp
+WHERE sal >= 2000 
+AND sal <= 3000;
+
+SELECT ename, sal FROM emp
+WHERE sal BETWEEN 2000 AND 3000;
+```
+
+
+### IN (x,y,z);
+1. 查询工资为3000, 1500, 5000的员工姓名和工资
+```
+SELECT ename,sal FROM emp
+WHERE sal = 3000 
+OR sal = 1500
+OR sal = 5000;
+
+SELECT ename,sal FROM emp
+WHERE sal IN (3000, 1500, 5000);
+```
+
+
+
+
+
+
+
 
 
 
