@@ -116,17 +116,33 @@ WHERE sal BETWEEN 2000 AND 3000;
 ### IN (x,y,z);
 1. 查询工资为3000, 1500, 5000的员工姓名和工资
 ```
-SELECT ename,sal FROM emp
+SELECT ename,sal 
+FROM emp
 WHERE sal = 3000 
 OR sal = 1500
 OR sal = 5000;
 
-SELECT ename,sal FROM emp
+SELECT ename,sal 
+FROM emp
 WHERE sal IN (3000, 1500, 5000);
 ```
 
-
-
+### 综合练习
+1. 查询有上级领导并且是在3号部门的员工信息
+```
+SELECT * 
+FROM emp
+WHERE mgr IS NOT NULL
+AND deptno = 3;
+```
+2. 查询2号部门工资在1000到2000之间的员工姓名，工资和部门编号
+```
+SELECT ename, sal, deptno
+FROM emp
+WHERE deptno = 2
+AND sal BETWEEN 1000 AND 2000;
+```
+3. 查询1号部门工资为800和1600员工信息
 
 
 
