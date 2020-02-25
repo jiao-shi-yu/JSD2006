@@ -3,6 +3,16 @@
 通过Java语言和数据库进行连接的API（Application Programming Interface, 
 应用程序编程接口)。
 
+
 ### 如何使用JDBC
 1. 创建一个Maven工程
 2. 在pom.xml文件中添加 `mysql依赖`
+```
+<dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.9</version>
+        </dependency>
+    </dependencies>
+```

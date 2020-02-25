@@ -114,4 +114,14 @@ vim /usr/java/apache-maven-3.6.3/conf/settings.xml
 ```
 
 
+## Intellij IDEA Maven配置
+```
+Preferences -> Build, Execution, Deployment 
+-> Build Tool -> Maven 
+-> Maven home directory : 
+选择/Users/yuyu/java/apache-maven-3.6.3
+User Settings File： 
+选择/Users/yuyu/java/apache-maven-3.6.3/conf/settings.xml
+```
+
 
