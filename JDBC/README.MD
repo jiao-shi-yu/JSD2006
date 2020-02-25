@@ -12,7 +12,9 @@
             <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.9</version>
+            <version>8.0.19</version>
         </dependency>
     </dependencies>
 ```
+
+### Mac eclipse 无法建立数据库连接
