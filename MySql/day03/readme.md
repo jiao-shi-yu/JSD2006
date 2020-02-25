@@ -119,7 +119,3 @@ ON e.deptno = d.deptno;
 
 
 
-
-
-
-
