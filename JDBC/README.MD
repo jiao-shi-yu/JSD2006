@@ -6,10 +6,10 @@
 
 ### 如何使用JDBC
 1. 创建一个Maven工程
-2. 在pom.xml文件中添加 `mysql依赖`
+2. 在`pom.xml`文件中添加 `mysql依赖`
 ```
-<dependencies>
-        <dependency>
+    <dependencies>
+            <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.9</version>
