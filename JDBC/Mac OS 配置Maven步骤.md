@@ -102,15 +102,54 @@ echo $M2_HOME
 ```
 vim /usr/java/apache-maven-3.6.3/conf/settings.xml
 ```
-2. 找mirrors, 添加阿里云镜像maven仓库
+2. 全部替换
 ```
-<mirrors>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository/>
+  <interactiveMode/>
+  <usePluginRegistry/>
+  <offline/>
+  <pluginGroups/>
+  <servers/>
+  <mirrors>
     <mirror>
-        <id>ali yun</id>
-        <name>aliyun maven</name>
-        <url>https://maven.aliyun.com/repository/public/</url>
+     <id>aliyunmaven</id>
+     <mirrorOf>*</mirrorOf>
+     <name>阿里云公共仓库</name>
+     <url>https://maven.aliyun.com/repository/public</url>
     </mirror>
-</mirrors>
+     <mirror>
+     <id>aliyunmaven</id>
+     <mirrorOf>*</mirrorOf>
+     <name>阿里云谷歌仓库</name>
+     <url>https://maven.aliyun.com/repository/google</url>
+    </mirror>
+    <mirror>
+     <id>aliyunmaven</id>
+     <mirrorOf>*</mirrorOf>
+     <name>阿里云阿帕奇仓库</name>
+     <url>https://maven.aliyun.com/repository/apache-snapshots</url>
+    </mirror>
+    <mirror>
+     <id>aliyunmaven</id>
+     <mirrorOf>*</mirrorOf>
+     <name>阿里云spring仓库</name>
+     <url>https://maven.aliyun.com/repository/spring</url>
+    </mirror>
+    <mirror>
+     <id>aliyunmaven</id>
+     <mirrorOf>*</mirrorOf>
+     <name>阿里云spring插件仓库</name>
+     <url>https://maven.aliyun.com/repository/spring-plugin</url>
+    </mirror>
+  </mirrors>
+  <proxies/>
+  <profiles/>
+  <activeProfiles/>
+</settings>
 ```
 
 
