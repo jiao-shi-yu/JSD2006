@@ -96,3 +96,22 @@ echo $M2_HOME
 ```
 
 ***哈哈哈，终于成功啦***
+
+### 6.更改国内镜像
+1. 找到Maven安装目录下的`settings.xml`
+```
+vim /usr/java/apache-maven-3.6.3/conf/settings.xml
+```
+2. 找mirrors, 添加阿里云镜像maven仓库
+```
+<mirrors>
+    <mirror>
+        <id>ali yun</id>
+        <name>aliyun maven</name>
+        <url>https://maven.aliyun.com/repository/public/</url>
+    </mirror>
+</mirrors>
+```
+
+
+
