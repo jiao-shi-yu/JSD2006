@@ -163,4 +163,30 @@ User Settings File：
 选择/Users/yuyu/java/apache-maven-3.6.3/conf/settings.xml
 ```
 
+## Eclipse配置Maven
+```
+Preferences -> Maven -> Installations -> Add
+你的安装路径 -> Apply and Close
+
+Preferences -> Maven -> User Settings ->
+安装路径下的settings.xml -> Apply and Close
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
