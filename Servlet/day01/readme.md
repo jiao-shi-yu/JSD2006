@@ -66,3 +66,18 @@ Deployment Descriptor -> 右键 -> Generate Deployment Descript Stub
 ```
 
 #### 新建servlet
+
+##### 缺少servlet-api.jar包
+
+- 错误：HttpServlet cannot be resloved to a type.
+- 原因：Eclipse中没有`servlet-api.jar`，它在Apache Tomcat中。
+- 解决：
+```
+项目名右键，选择属性，然后点击Java Build Path下的Libraries，再点击Add Library，在弹出的对话框中点选Server Runtime, 然后选择你刚刚配置好的TomCat，然后Finish, Appy and Close.
+```
+
+
+
+
+
+
