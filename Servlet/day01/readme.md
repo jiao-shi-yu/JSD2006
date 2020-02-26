@@ -74,7 +74,9 @@ Deployment Descriptor -> 右键 -> Generate Deployment Descript Stub
 - 解决：项目名右键，选择属性，然后点击Java Build Path下的Libraries，再点击Add Library，在弹出的对话框中点选Server Runtime, 然后选择你刚刚配置好的TomCat，然后Finish, Appy and Close.
 
 
-
+### 解决中文乱码
+- 问题：TomCat 8.0以下版本存在中文乱码问题。
+- 解决：在`Servers`项目路径下，找到`server.xml`,在`line 65`添加`URIEncoding="UTF-8"`. 保存,重启。
 
 
 
