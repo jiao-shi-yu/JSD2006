@@ -17,7 +17,13 @@
 2. POST请求方式中有中文，则在Servlet中获取参数前，需要设置请求的字符编码`req.setCharacterEncoding("UTF-8");`.
 3. 响应数据有中文，则在设置响应内容类型的时候，指定字符(编码)集`resp.setContentType("text/html;charset=UTF-8")`。
 
-### 在工程中使用数据库
+
+### Eclipse自定义代码块
+
+
+
+
+### 工程使用数据库的准备工作
 1. 确保有newdb3这个数据库和里面的user表
 如果没有数据库，则执行以下代码：
 ```
@@ -26,13 +32,13 @@ USE newdb3;
 CREATE TABLE user (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), password VARCHAR(20));
 ```
 
-2. 在pom.xml配置文件中，添加mysql-connector-java的描述
+2. 在pom.xml配置文件中,添加mysql-connector-java的描述
 ```
   <dependencies>
     <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.6</version>
+        <version>8.0.19</version> <-- 注意mysql 版本的问问题 -->
     </dependency>
     <dependency>
         <groupId>commons-dbcp</groupId>
@@ -41,5 +47,23 @@ CREATE TABLE user (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), pass
     </dependency>
   </dependencies>
 ```
+
+3. 在工程中添加`DBUtils.java`和`jdbc.properties`配置文件
+    - `jdbc.properties`添加到`java/main/resources`路径下。
+
+
+
+#### 工程JRE改成1.7后, 相应Facets也需要改变
+```
+工程名右键 -> 属性 -> Project Facets -> Java 1.5 -> 1.7 -> Apply
+```
+
+
+
+
+
+
+
+
 
 
