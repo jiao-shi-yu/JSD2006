@@ -58,12 +58,23 @@ CREATE TABLE user (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), pass
 工程名右键 -> 属性 -> Project Facets -> Java 1.5 -> 1.7 -> Apply
 ```
 
+### Eclipse新建代码片段模板
+```
+Preferences -> Java -> Editor -> Templates， New一个出来。
+```
 
+### Eclipse生成Getter和Setter
+```
+Mac系统下，文档编辑页面右键，可以看到source对应的快捷键为： command + option + S 
 
+然后选择需要生成的代码
 
+```
 
-
-
+### Eclipse 导包快捷键
+```
+command + shift + O
+```
 
 
 
