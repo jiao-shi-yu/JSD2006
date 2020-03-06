@@ -5,7 +5,8 @@
 # 1.Srping框架
 框架：在Java开发领域中，具体的表现为一系列的jar文件，它通常约定了一些特殊的数据处理流程或编程方式，以解决特定的问题。
 
-Spring框架主要解决的问题是：创建对象，并管理对象。简单的说，在传统开发模式下，当需要某个对象时，可以在项目中编写
+Spring框架主要解决的问题是：**创建对象，并管理对象**。
+简单的说，在传统开发模式下，当需要某个对象时，可以在项目中编写
 Spring框架主要解决的问题是:创建对象，并管理对象。简单的说，在传统开发模式下，当需要某个对象时，可以在项目中编写例如`User user = new Uepr();` 这样的代码来创建对象，也可以通过`user .setName("Alex" );`这样的方式来为其中的属性赋值，或者将其声明为`public static User user; `以添加static修饰符使之在内存中的存在时间更长等等，当使用Spring框架后，就不必再写以上这些代码了，相关的工作就可以交给Spring框架来完成，主要是通过配置文件或注解来解决这些问题。
 
 # 2.创建基于Maven的项目
@@ -28,3 +29,41 @@ Spring框架主要解决的问题是:创建对象，并管理对象。简单的�
 </dependency>
 </dependencies>
 ```
+
+# 3.通过Spring框架获取对象
+
+## 3.1 通过无参数构造方法
+
+先从http://doc.canglaoshi.org/config/spring-context.zip下载配置文件的压缩包，解压后得到applicationContext.xml文件，将该文件复制到项目的src/main/resources文件夹之下，这个文件就是Spring框架的配置文件。
+
+假设需要通过Spring创建一个日期类型的对象，可以在配置文件中添加：
+
+  <!-- 通过Spring框架创建Date对象 -->
+  <!-- id属性：自定义名称，表示Bean Id，后续将通过这个值获取对象，通常推荐使用类名将首字母改为小写 -->
+  <!-- class属性：需要创建哪个类的对象，取值是类的全名 -->
+  <bean id="date" class="java.util.Date"></bean>
+添加完成后，如果启动Spring，Spring框架就会自动创建java.util.Date类的对象，并且对象名为date，开发人员就可以通过date这个名称获取到对象了！
+
+可以自定义一个带main()方法的类，加载以上配置文件，就可以得到Spring容器，并从容器中获取所需的对象：
+```
+public class SpringTest {
+​
+  public static void main(String[] args) {
+    // 加载Spring配置文件，获取Spring容器
+    ClassPathXmlApplicationContext ac
+      = new ClassPathXmlApplicationContext("applicationContext.xml");
+    
+    // 从Spring容器中获取对象，调用getBean()方法时，参数就是配置文件中的Bean Id
+    Date date = (Date) ac.getBean("date");
+    
+    // 测试
+    System.out.println(date);
+    
+    // 关闭
+    ac.close();
+  }
+​
+}
+```
+
+
