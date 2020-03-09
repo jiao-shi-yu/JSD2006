@@ -163,9 +163,38 @@ public class UserLoginServlet {
 ```
 >注意`userMyBatisDao`首字母小写！
 
+另外， 使用`@Resource`注解，也可以实现自动装配，例如：
+```
+@Resource
+private UserDao userDao;
+```
 
+如果使用`@Resource`注解， 需要制定装配的Bean Id, 可以直接在注解中装配参数。
+```
+@Resource(name="userMyBatisDao")
+private UserDao userDao;
+```
+关于`@Resource`注解的装配机制： 优先尝试`ByName`.
 
+实际使用中更推荐`@Autowired`注解，另外在装配参数时，可能要使用`@Qualifier("")`.
 
+# 9. 小结
+- 理解Spring框架的作用：创建对象，管理对象；
+- 理解Spring框架的优点：降低了对象的依赖关系，实现了解耦；
+- 掌握`<bean>`节点的基本配置，包括其中的属性：`id`, `class`, `factory-method`, `factory-bean`, `scope`, `lazy-init`,`init-method`,`destroy-method`,`autowire`;
+- 了解Spring管理的对象的作用域与生命周期;
+- 理解Spring框架的IoC和DI;
+- 掌握通过SET方式为属性注入值得做法，其中，注入结合类型的属性的做法可以仅了解
+- 了解通过构造方法为属性注入值;
+- 掌握Spring表达式的使用;
+- 理解自动装配中的byName和byType这两种模式
+- 了解通过XML配置实现自动装配
+- 理解组件扫描并掌握配置
+- 掌握`@Component` `@Controller` `@Servive` `@Reposity`注解;
+- 了解`@Scope` `@Lazy` `@PostConstruct` `@PreDestroy` 注解;
+- 掌握`@Autowired` `@Qualifier` `@Resource` 注解;
+- 掌握`@Autowired` 与 `@Resource`的区别。
+- 关于Spring AOP会在项目阶段的末期再讲。
 
 
 
