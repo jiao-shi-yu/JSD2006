@@ -51,7 +51,7 @@ public class User {
 
 
 
-## 8.3 
+## 8.3 通过注解管理对象的声明周期
 在Spring管理类的对象的前提下，可以通过`@Scope`注解来配置该类的对象是否单例，
 该注解可以配置参数为`singleton`或`protype`, 前者默认单例，后者非单例。
 ``` java
