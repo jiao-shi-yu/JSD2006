@@ -51,7 +51,7 @@ public class User {
 
 
 
-## 8.3 通过注解管理对象的声明周期
+## 8.3 
 在Spring管理类的对象的前提下，可以通过`@Scope`注解来配置该类的对象是否单例，
 该注解可以配置参数为`singleton`或`protype`, 前者默认单例，后者非单例。
 ``` java
@@ -149,7 +149,8 @@ public class UserLoginServlet {
 
 在自动装配的前提下，如果有多个匹配类型的对象，且名称都不匹配, 又不希望修改属性名称。
 就可以结合`@Qualifier`注解一起使用：
-```
+
+``` java
 @Controller
 public class UserLoginServlet {
     @Autowired
