@@ -21,14 +21,14 @@
 
 # Eclipse `cmd + F6`切换编辑页
 
-### 4. 配置视图解析器。
+4. 配置视图解析器。
 ***在Spring的配置文件中，配置Thymeleaf的视图解析器***。  
     
 
 ```xml
     <!-- 配置模板解析器 -->
     <!-- ClassLoaderTemplateResolver: 当吧模板放在src/main/resources时, 必须使用这个 -->
-    <bean class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
+    <bean id="templateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
         <property name="prefix" value="/templates/"></property>
         <property name="suffix" value=".html"></property>
         <property name="characterEncoding" value="utf-8"></property>
@@ -38,7 +38,7 @@
     
     <!-- 配置模板引擎 -->
     <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
-        <property name="setTemplateResolver"></property>
+        <property name="templateResolver" ref="templateResolver"></property>
     </bean>
     
     <!-- 配置Thymeleaf视图解析器 -->
@@ -66,4 +66,47 @@
     }
 ```
 
+## 4. 接收客户端提交的请求参数
+### 4.1 通过HttpServletRequest获取
 
+```java
+    @RequestMapping("handle_register.do")
+    @ResponseBody
+    public String HandleRegister(HttpServletRequest request) {
+        System.out.println("UserController.handleRegister()");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String age = request.getParameter("age");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+        
+        System.out.println("\tusername=" + username);
+        System.out.println("\tpassword=" + password);
+        System.out.println("\tage=" + age);
+        System.out.println("\tphone=" + phone);
+        System.out.println("\temail=" + email);
+        
+        
+        // 暂不关心后续的显示
+        return "OK";
+    }
+```
+### 4.2 通过匹配名称来获取
+
+```java
+@RequestMapping("handle_register.do")
+    @ResponseBody
+    public String HandleRegister(String username, String password, int age, String phone, String email) {
+        
+        
+        System.out.println("\t[4.2]username=" + username);
+        System.out.println("\t[4.2]password=" + password );
+        System.out.println("\t[4.2]age=" + age);
+        System.out.println("\t[4.2]phone=" + phone);
+        System.out.println("\t[4.2]email=" + email);
+        
+        
+        // 暂不关心后续的显示
+        return "OK";
+    }
+```
