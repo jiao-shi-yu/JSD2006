@@ -92,7 +92,7 @@
     }
 ```
 ### 4.2 通过匹配名称来获取
-
+参数名卸载方法的参数列表中，还可以指定期望的类型。
 ```java
 @RequestMapping("handle_register.do")
     @ResponseBody
