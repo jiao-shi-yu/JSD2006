@@ -66,8 +66,8 @@
     }
 ```
 
-## 4. 接收客户端提交的请求参数
-### 4.1 通过HttpServletRequest获取
+# 4. 接收客户端提交的请求参数
+## 4.1 通过HttpServletRequest获取
 
 ```java
     @RequestMapping("handle_register.do")
@@ -91,7 +91,7 @@
         return "OK";
     }
 ```
-### 4.2 通过匹配名称来获取
+## 4.2 通过匹配名称来获取
 参数名卸载方法的参数列表中，还可以指定期望的类型。
 ```java
 @RequestMapping("handle_register.do")
@@ -110,3 +110,62 @@
         return "OK";
     }
 ```
+## 4.3 通过一个自定义类来匹配
+自定义一个类：其中的属性与网页传来的属性，必须保证名称一致。
+```java
+
+public class User {
+    private String username;
+    private String password;
+    private Integer age;
+    private String phone;
+    private String email;
+    /* GETTERS and SETTERS省略了*/
+    @Override
+    public String toString() {
+        return "User [username=" + username + ", password=" + password + ", age=" + age + ", phone=" + phone
+                + ", email=" + email + "]";
+    }
+}
+
+```
+在处理请求的方法的参数列表中，传入刚刚自定义的类：
+```java
+    @RequestMapping("handle_register.do")
+    @ResponseBody
+    public String HandleRegister(User user) {
+        
+        System.out.println("\t[4.3] " + user);
+        
+        // 暂不关心后续的显示
+        return "OK";
+    }
+```
+
+
+## 4.4 小结
+关于使用`HttpServletRequest`来获取请求参数的做法：
+- 获取参数的过程比较麻烦
+- 需要自行转换所需要的数据类型
+- `HttpServletRequest`是重量级参数
+- 不便于执行单元测试
+所以在使用SpringMVC框架是，应该是使用 ***4.2***和 ***4.3***的做法。
+- 当请求参数的数量较多(4~6)甚至非常多(>6)时，使用 ***4.3***的做法;
+- 参数少使用 ***4.2***;
+另外，***4.2***和 ***4.3***可以组合使用，
+例如，设计注册功能时，可以通过4.3自定义类的做法接收用户填写的注册信息，
+同时使用4.2匹配参数的做法接收验证码。
+
+
+
+
+# 5. 转发
+## 5.1 使用HttpServlet实现转发
+
+
+
+
+
+
+
+
