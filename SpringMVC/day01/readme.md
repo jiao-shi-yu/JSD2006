@@ -22,6 +22,98 @@ SpringMVC框架主要解决了VC之间的交互问题！在SpringMVC框架中，
 
 # 3.SpringMVC - HelloWorld
 ## 3.1 案例目标
-开发完成后，启动项目，打开浏览器，输入`http://localhost:8080/项目名称/hello.do`
+开发完成后，启动项目，打开浏览器，输入`http://localhost:8080/项目名称/hello.do`网址，
+可以在浏览器中显示指定的内容！
+
+### 3.2. 创建项目
+
+创建**Maven Project**，在创建过程中，勾选**Create a simple project**，**Group Id**值为`cn.tedu`，**Artifact Id**为`springmvc01`，**Packging**必须选择`war`。
+
+创建好项目后，首先需要生成**web.xml**，然后，在**pom.xml**中添加`spring-webmvc`依赖：
+
+```
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.1.6.RELEASE</version>
+        </dependency>
+    </dependencies>
+```
+
+> 在使用`spring-webmvc`时，推荐使用4.2或以上版本。
+
+由于SpringMVC框架是基于Spring框架的，所以，需要从前序项目中复制**spring.xml**文件到当前项目中，并删除原有的配置。
+
+### 3.3. 配置DispatcherSerlvet
+
+```xml
+<servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <url-pattern>*.do</url-pattern>
+</servlet-mapping>
+```
+
+接下来，需要通过`DispatcherServlet`加载Spring配置文件。
+在<servlet>节点的子级.
+
+
+默认情况下，当第一个Servelt第一次需要接收请求是，才会创建对象。
+需要配置成： 启动Tomcat就创建对象。
+```xml
+<servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <url-pattern>*.do</url-pattern>
+</servlet-mapping>
+```
+先在**spring.xml**中添加组件扫描：
+
+```xml
+<context:component-scan base-package="cn.tedu.spring" />
+```
+
+
+
+类添加@Component注解
+
+## 3.4 编写控制器 接受并处理 客户端的请求
+
+在组件扫描的包下，创建控制器类。 
+通常控制器类会使用Controller作为类名的后缀
+控制器既不需要继承特定的类
+也不需要实现特定的接口。
+
+    @RequestMapping("hello.do")
+    public String showHello() {
+        System.out.println("HelloController.showHello()");
+        return null;
+    }
+
+http://localhost:8080/springmvc01/hello.do
+
+返回点儿东西
+
+    @RequestMapping("hello.do")
+    @ResponseBody
+    public String showHello() {
+        System.out.println("HelloController.showHello()");
+        return "Hello, SpringMVC";
+    }
+
 
 
