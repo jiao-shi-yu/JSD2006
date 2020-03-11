@@ -161,9 +161,59 @@ public class User {
 
 # 5. 转发
 ## 5.1 使用HttpServlet实现转发
+```java
+
+    @RequestMapping("handle_login.do")
+    public String HandleLogin(String username, String password, HttpServletRequest request) {
+        System.out.println("username="+username);
+        System.out.println("password="+password);
+        
+        if ("root".equals(username)) {
+            if ("1234".equals(password)) {
+                
+            } else {
+                // 登录失败，密码错误
+                String message = "登录失败，密码错误！";
+                request.setAttribute("errorMessage", message);
+                return "error";
+            }
+        } else {
+            // 登录失败，用户名错误
+            String message = "登录失败，用户名错误！";
+            request.setAttribute("errorMessage", message);
+            return "error"; // 转发到error对应的页面
+        }
+        return "OK";
+    }
+```
 
 
+## 5.2 使用ModelMap实现转发
 
+```java
+    @RequestMapping("handle_login.do")
+    public String HandleLogin(String username, String password, ModelMap map) {
+        System.out.println("username="+username);
+        System.out.println("password="+password);
+        
+        if ("root".equals(username)) {
+            if ("1234".equals(password)) {
+                
+            } else {
+                // 登录失败，密码错误
+                String message = "登录失败，密码错误！";
+                map.addAttribute("errorMessage", message);
+                return "error";
+            }
+        } else {
+            // 登录失败，用户名错误
+            String message = "登录失败，用户名错误！";
+            map.addAttribute("errorMessage", message);
+            return "error"; // 转发到error对应的页面
+        }
+        return "OK";
+    }
+```
 
 
 
