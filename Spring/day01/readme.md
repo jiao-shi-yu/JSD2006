@@ -97,8 +97,7 @@ public static Calendar getInstance() {
 Spring也支持通过静态工厂方法创建对象。只需在配置文件的`<bean>`节点下添加一个`factory-method`属性，指明工厂方法的名称。如下所示:
 __在applicationContext中:__
 ```xml
-<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
-</bean>
+<bean id="calendar" class="java.util.Calendar" factory-method="getInstance"></bean>
 ```
 __在SpringTest.java中:__
 ```java
@@ -153,13 +152,174 @@ public class UserDaoFactory {
 <bean id="userDao" class="cn.tedu.spring.UserDao"
     factory-bean="userDaoFactory" factory-method="newDaoInstance"></bean>
 ```
-
+然后再测试文件中:
+```java
+public class SpringTest {
+    public static void main(String[] args) {
+        // 1. 加载Spring配置文件，获取容器
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        
+        // 2. 调用容器的getBean()方法，获取对象
+        UserDao userDao = (UserDao) applicationContext.getBean("userDao");
+        
+        // 3. 测试
+        System.out.println(userDao);    
+        // 4. 关闭
+        applicationContext.close();
+    }
+}
+```
+跟其它两种通过Spring获取对象的方法,没有什么区别.
+控制台中的输出为:
+```
+Thu Mar 12 20:23:24 CST 2020
+java.util.GregorianCalendar[time=1584015804634,......, DST_OFFSET=0]
+cn.tedu.spring.UserDao@365c30cc
+```
 
 
 # 4. Spring管理的Bean的作用域与生命周期
-由Spring管理的Bean，默认是单例的
+-----------------------------------
+## 单例 与 非单例
+由Spring管理的Bean，默认是单例的. 也就是说,使用同一个Bean id获取到的对象,只有一个,是共用的.  
+1. 可以在`<bean>`节点中添加`scope`属性,来指定是否为单例.
+`scope="singlton"`为单例;`scope="prototype"`非单例.
 
-`<bean>`节点中添加属性`scope="singlton"`或者`scope="prototype"`.
+比如说先创建一个`User`类:
+```java
+public class User {
+    public User() {
+        System.out.println("\tUser.User()"); //syst 快捷键生成打桩方法.
+    }
+}
+```
+
+# 当配置为默认的`scope="singleton"`时:
+```xml
+<bean id="user" class="cn.tedu.spring.user" scope="singleton"></bean>
+```
+从Spring容器多次获取同一个类的实例对象,
+```java
+public class SpringTest {
+    public static void main(String[] args) {
+        // 1. 加载Spring配置文件，获取容器
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 2. 调用容器的getBean()方法，获取对象
+        User user1 = (User) applicationContext.getBean("user");
+        User user2 = (User) applicationContext.getBean("user");
+        User user3 = (User) applicationContext.getBean("user");
+        // 3. 测试
+        System.out.println(user1);
+        System.out.println(user2);
+        System.out.println(user3);
+        // 4. 关闭
+        applicationContext.close();
+    }
+}
+```
+控制台输出:
+```
+    User.User()
+cn.tedu.spring.User@799d4f69
+cn.tedu.spring.User@799d4f69
+cn.tedu.spring.User@799d4f69
+```
+得到的结果是同一个实例对象.
+
+
+
+# 当配置为`scope="prototype"`,原型,也就是非单例时:
+```xml
+<bean id="user" class="cn.tedu.spring.User" scope="prototype"></bean>
+```
+运行同样的java代码,控制台中输出:
+```
+    User.User()
+    User.User()
+    User.User()
+cn.tedu.spring.User@799d4f69
+cn.tedu.spring.User@49c43f4e
+cn.tedu.spring.User@290dbf45
+```
+可以看到:
+此时通过Spring容器获取的多个对象,是不同的实例对象.  
+
+
+## 作用域 与 生命周期
+
+Spring框架决定对象何时创建何时销毁. 在创建和销毁对象时,如果需要执行特定的操作,就需要调用对应的生命周期方法.
+
+在需要添加生命周期方法的类中,可以自定里两个方法,分别表示初始化方法和销毁方法.  
+关于方法的声明,有几点需要注意:
+- 应该使用`public`权限
+- 返回值为`void`类型
+- 方法名叫什么无所谓
+- 参数列表必须为空
+例如:
+```java
+public class User {
+     public User() {
+         //systrace 快捷键生成打桩方法.
+         System.out.println("\tUser.User()");       
+     }
+     
+     // 初始化方法
+     public void init() {
+         System.out.println("User.init()");
+     }
+     // 销毁方法
+     public void destroy() {
+         System.out.println("User.destroy()");
+     }
+}
+```
+同时,需要在`<bean>`节点中添加两个表示生命周期方法的的属性,`init-method`和`destroy-method`.  并指明对应的初始化方法名,和销毁方法名.
+```xml
+<bean id="user" class="cn.tedu.spring.User" scope="prototype" init-method="init" destroy-method="destroy"></bean>
+```
+执行SpringTest测试类,控制台中输出:
+```
+    User.User()
+User.init()
+    User.User()
+User.init()
+    User.User()
+User.init()
+cn.tedu.spring.User@799d4f69
+cn.tedu.spring.User@49c43f4e
+cn.tedu.spring.User@290dbf45
+```
+可以看到,是先执行构造方法,然后立即执行指定的初始化方法.
+
+将`User`Bean改成单例模式:
+
+```
+<bean id="user" class="cn.tedu.spring.User" scope="singleton" init-method="init" destroy-method="destroy">
+```
+
+然后再运行测试类.
+
+控制台输出:
+```
+    User.User()
+User.init()
+cn.tedu.spring.User@2d127a61
+cn.tedu.spring.User@2d127a61
+cn.tedu.spring.User@2d127a61
+User.destroy()
+```
+可以看到, 单例模式下, 是先执行构造方法, 然后立即执行指定的`init-method`, 最后, 当这个对象用不到了, 在销毁前执行了`destroy-method`.  
+总结就是:`创建 -> 执行init-method -> 使用 -> 执行destroy-method -> 销毁`  
+
+
+
+# 5. Spring IoC 控制反转
+- __IoC__: Inversion of control, 控制反转. 在传统开发模式下, 都是程序员new一个对象, 然后通过SETTER方法设置属性.可以理解为"程序员掌握了对象的控制权". 使用了Spring框架后, 
+
+
+
+
+
 
 ## 附：设计模式之单例模式
 如果需要某个类是单例的，例如：
@@ -299,11 +459,55 @@ public class King {
 ```
 
 
-    
-
-
-
-
+# 配置好了阿里云Maven仓库的settings.xml,复制到下面,便于日后使用:
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+    http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <localRepository/>
+    <interactiveMode/>
+    <usePluginRegistry/>
+    <offline/>
+    <pluginGroups/>
+    <servers/>
+    <mirrors>
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云公共仓库</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </mirror>
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云谷歌仓库</name>
+            <url>https://maven.aliyun.com/repository/google</url>
+        </mirror>
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云阿帕奇仓库</name>
+            <url>https://maven.aliyun.com/repository/apache-snapshots</url>
+        </mirror>
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云spring仓库</name>
+            <url>https://maven.aliyun.com/repository/spring</url>
+        </mirror>
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云spring插件仓库</name>
+            <url>https://maven.aliyun.com/repository/spring-plugin</url>
+        </mirror>
+    </mirrors>
+    <proxies/>
+    <profiles/>
+    <activeProfiles/>
+</settings>
+```
 
 
 
