@@ -1,6 +1,6 @@
 ### 课前准备
 1. 新建Workspace, File -> Switch Workspace
-2. 配置Maven, settings.xml
+2. 配置Maven->UserSettings: settings.xml
 
 # 1.Srping框架
 -------------
@@ -13,7 +13,7 @@ Spring框架主要解决的问题是：**创建对象，并管理对象**。
 而在`Spring`中不需要这么麻烦。通过配置文件和注解，就可以很方便的实现创建和管理对象了。
 
 
-# 2.创建基于Maven的项目
+# 2.创建基于Maven的Spring项目
 ---------------------
 
 # 1. 新建Maven工程
@@ -34,8 +34,8 @@ Spring框架主要解决的问题是：**创建对象，并管理对象**。
 ```xml
     <dependencies>
         <dependency>
-            <groupId>org. spr ingf ramework</groupId>
-            <artif actId>spring-context</arti factId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
             <version>5.1.5.RELEASE</version>
         </dependency>
     </dependencies>
@@ -44,56 +44,116 @@ Spring框架主要解决的问题是：**创建对象，并管理对象**。
 # 3.通过Spring框架获取对象
 -----------------------
 
-## 3.1 通过无参数构造方法创建对象
+## 3.1 通过无参构造方法创建对象
 
-1. 从[达内开发文档服务](doc.canglaoshi.org)下载`Spring`的配置文件，__常用下载 -> 配置文件下载 -> spring-context.zip__.
+1. 从[达内开发文档服务器](doc.canglaoshi.org)下载`Spring`的配置文件，__常用下载 -> 配置文件下载 -> spring-context.zip__.
 2. 下载完成后，解压得到__applicationContext.xml__文件，将这个文件复制到项目的`src/main/resources`路径下.
-
-
-可以自定义一个带main()方法的类，加载以上配置文件，就可以得到Spring容器，并从容器中获取所需的对象：
+3. 在配置文件中添加配置信息
+```xml
+<bean id="date" class="java.util.Date"></bean>
 ```
+>一个<bean>就对应着一个java类，其中`id`属性是一个Bean的唯一标识，后续通过`id`属性获取对象。而`class`属性是需要获取的对象的java类。
+4. 在java文件中通过Spring创建对象
+准备一个Java测试类`cn.tedu.spring.SpingTest.java`，在`main()`方法中通过Spring容器获取对象。
+具体分为四步：
+    1. 加载Spring配置文件，获取Spring容器
+    2. 调用Spring容器的`getBean()`方法，从容器中获取对象。
+    3. 测试
+    4. 关闭容器
+```java
+package cn.tedu.spring;
+
+import java.util.Date;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 public class SpringTest {
-​
-  public static void main(String[] args) {
-    // 加载Spring配置文件，获取Spring容器
-    ClassPathXmlApplicationContext ac
-      = new ClassPathXmlApplicationContext("applicationContext.xml");
-    
-    // 从Spring容器中获取对象，调用getBean()方法时，参数就是配置文件中的Bean Id
-    Date date = (Date) ac.getBean("date");
-    
-    // 测试
-    System.out.println(date);
-    
-    // 关闭
-    ac.close();
-  }
-​
+    public static void main(String[] args) {
+        // 1. 加载Spring配置文件，获取容器
+        ClassPathXmlApplicationContext appliactionContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 2. 调用容器的getBean()方法，获取对象
+        Date date = (Date) appliactionContext.getBean("date");
+        // 3. 测试
+        System.out.println(date);
+        // 4. 关闭
+        appliactionContext.close();
+    }
 }
-```
 
+```
 
 ## 3.2 通过静态工厂方法创建对象
 
+静态工厂方法：某个类中存在`static`修饰的方法，该方法 __返回值__是当前类的实例。 
+例如：`Calendar`类就就存在一个`getInstance()`的静态工厂方法。
+
 ```java
 public static Calendar getInstance() {
+    // ...
+}
+```
+由于`Calendar`是一个抽象类，不可能通过`new Calendar()`这样的语法创建对象，只能通过`Calendar.getInstance()`这样的静态工厂方法获取实例对象。
 
+Spring也支持通过静态工厂方法创建对象。只需在配置文件的`<bean>`节点下添加一个`factory-method`属性，指明工厂方法的名称。如下所示:
+__在applicationContext中:__
+```xml
+<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+</bean>
+```
+__在SpringTest.java中:__
+```java
+public class SpringTest {
+    public static void main(String[] args) {
+        // 1. 加载Spring配置文件，获取容器
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 2. 调用容器的getBean()方法，获取对象
+        Date date = (Date) applicationContext.getBean("date");
+        Calendar calendar = (Calendar) applicationContext.getBean("calendar");
+        // 3. 测试
+        System.out.println(date);
+        System.out.println(calendar);
+        // 4. 关闭
+        applicationContext.close();
+    }
+}
+```
+控制台中输出类似内容:
+```
+Thu Mar 12 19:45:33 CST 2020
+java.util.GregorianCalendar[time=1584013533969, ......., DST_OFFSET=0]
+```
+
+## 3.3 通过实例工厂方法创建对象
+
+如果某个类没有无参构造方法,也没有静态工厂方法,但是存在第二个类,第二个类中存在方法,这个方法可以产生第一个类的实例对象. 那么Spring就可以利用这个实例工厂方法,创建出第一个类的实例对象.
+
+如下代码所示的两个类:
+```java
+public class UserDao {
+    public UserDao(Object object) {
+
+    }
+}
+```
+```java
+public class UserDaoFactory {
+    public UserDao newDaoInstance() {
+        return new UserDao(null);
+    }
 }
 ```
 
+在Spring的配置文件中,需要先添加一个工厂类的`<bean>`,跟一个普通的`<bean>`没什么区别,只需要填写`id`和`class`属性.
+然后,添加需要用到其实例对象的类的Bean,这个Bean需要额外配置两个属性:
+`factory-bean`和`factory-method`,填写工厂类的bean的`id`和工厂类中的实例方法名.
 
-## 3.3 通过实例工厂方法创建对象
-只要有实例工厂方法，也是可以创建对象的。
+代码如下所示:
+```xml
+<bean id="userDaoFactory" class="cn.tedu.spring.UserDaoFActory"></bean>
+<bean id="userDao" class="cn.tedu.spring.UserDao"
+    factory-bean="userDaoFactory" factory-method="newDaoInstance"></bean>
+```
 
-另外一个勒种存在方法，可以创建所需要的类的对象。
-
-例如`UserDao`类，`UserDao`不满足无参构造方法和静态工厂方法前提，
-但是有一个`UserDaoFactory`
-
-
-#### Eclipse 配置 jdk
-
-#### Mac OS fn + f2 重命名
 
 
 # 4. Spring管理的Bean的作用域与生命周期
