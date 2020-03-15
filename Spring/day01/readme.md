@@ -1,5 +1,5 @@
 ### 课前准备
-1. 新建Workspace, File -> Switch Workspace
+1. 新建Workspace：File -> Switch Workspace
 2. 配置Maven->UserSettings: settings.xml
 
 # 1.Srping框架
@@ -30,7 +30,7 @@ Spring框架主要解决的问题是：**创建对象，并管理对象**。
 
 1. 在[Maven官网](https://mvnrepository.com/)搜索`spring-context`的依赖, 点击页面复制依赖。
 2. 在项目的`pom.xml`文件中，添加`<dependencies></dependencies>`节点
-3. 在刚刚添加的`<dependecies></dependencies`节点中，粘贴依赖描述。
+3. 在刚刚添加的`<dependecies></dependencies>`节点中，粘贴依赖描述。
 ```xml
     <dependencies>
         <dependency>
@@ -106,10 +106,8 @@ public class SpringTest {
         // 1. 加载Spring配置文件，获取容器
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         // 2. 调用容器的getBean()方法，获取对象
-        Date date = (Date) applicationContext.getBean("date");
         Calendar calendar = (Calendar) applicationContext.getBean("calendar");
         // 3. 测试
-        System.out.println(date);
         System.out.println(calendar);
         // 4. 关闭
         applicationContext.close();
@@ -124,7 +122,7 @@ java.util.GregorianCalendar[time=1584013533969, ......., DST_OFFSET=0]
 
 ## 3.3 通过实例工厂方法创建对象
 
-如果某个类没有无参构造方法,也没有静态工厂方法,但是存在第二个类,第二个类中存在方法,这个方法可以产生第一个类的实例对象. 那么Spring就可以利用这个实例工厂方法,创建出第一个类的实例对象.
+如果某个类没有无参构造方法,也没有静态工厂方法,但是存在第二个类, 这个类中存在可以产生第一个类的实例对象的工厂方法.  那么Spring就可以利用这个实例工厂方法, 创建出第一个类的实例对象.
 
 如下代码所示的两个类:
 ```java
@@ -194,7 +192,8 @@ public class User {
 }
 ```
 
-# 当配置为默认的`scope="singleton"`时:
+**当配置为默认的`scope="singleton"`时:**
+
 ```xml
 <bean id="user" class="cn.tedu.spring.user" scope="singleton"></bean>
 ```
@@ -226,9 +225,8 @@ cn.tedu.spring.User@799d4f69
 ```
 得到的结果是同一个实例对象.
 
+**当配置为`scope="prototype"`，原型，也就是非单例时:**
 
-
-# 当配置为`scope="prototype"`,原型,也就是非单例时:
 ```xml
 <bean id="user" class="cn.tedu.spring.User" scope="prototype"></bean>
 ```
@@ -241,8 +239,8 @@ cn.tedu.spring.User@799d4f69
 cn.tedu.spring.User@49c43f4e
 cn.tedu.spring.User@290dbf45
 ```
-可以看到:
-此时通过Spring容器获取的多个对象,是不同的实例对象.  
+可以看到：
+此时通过Spring容器获取的多个对象，是不同的实例对象。  
 
 
 ## 作用域 与 生命周期
