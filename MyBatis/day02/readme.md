@@ -80,11 +80,12 @@ UPDATE t_user SET group_id = 3 WHERE id IN (10, 11);
 # 12. 一对一的多表查询
 
 ```
-SELECT t_user.id, username, password, age, phone, email, group_id, name
+SELECT t_user.id, username, password, age, phone, email, 
+group_id AS groupId, name AS groupName
 FROM t_user
 LEFT JOIN t_group
 ON t_user.group_id = t_group.id
-WHERE t_user.id = 11;
+WHERE t_user.id = #{id}
 ```
 
 当执行关联查询时, 没有任何实体类可以封装查询结果! 
@@ -109,6 +110,10 @@ public class UserVO {
 
 >实体类与VO类, 在代码结构上类似. 只是定位不同. 实体类与数据表保持一致,VO类与查询结果对应一致.
 
+在接口中添加抽象方法:
+```
+User 
+```
 
 
 
@@ -116,8 +121,11 @@ public class UserVO {
 
 
 
-
-
+```
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): cn.tedu.mybatis.UserMapper.findVOById
+   
+--- 应该是fingUserVOById
+```
 
 
 
