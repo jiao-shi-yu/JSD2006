@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.mybatis.GroupMapper">
+
+	<resultMap id="groupVOMap" type="cn.tedu.mybatis.GroupVO">
+		<!-- group 的 id 和 name -->
+		<id column="gid" property="id"></id>
+		<result column="name" property="name"></result>
+		<!-- collection 来配置多个结果 -->
+		<collection property="users" ofType="cn.tedu.mybatis.User">
+			<id column="id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="password" property="password"/>
+			<result column="age" property="age"/>
+			<result column="phone" property="phone"/>
+			<result column="email" property="email"/>
+			<result column="group_id" property="groupId"/>
+		</collection>
+	</resultMap>
+	
+	<select id="findVOById" resultMap="groupVOMap">
+		SELECT t_group.id AS gid, name, t_user.*
+		FROM t_group
+		LEFT JOIN t_user
+		ON t_group.id = t_user.group_id
+		WHERE t_group.id = #{id}
+	</select>
+
+
+</mapper>
+

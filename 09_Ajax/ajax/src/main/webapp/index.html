@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在HTML中解析JSON数据示例</title>
+</head>
+<body>
+<h1>在HTML中解析JSON数据</h1>
+<script type="text/javascript">
+let json = {
+    "username":"root",
+    "password":"1234",
+    "age":24,
+    "phone":"138001183001",
+    "email":"root@tedu.cn",
+    "from":"Beijing",
+    "skills":["Java", "HTML", "JavaScript", "MySQL"],
+    "department":{
+        "id":6,
+        "name":"RD"
+    }
+};
+console.log(json.username);
+console.log(json.password);
+for(index in json.skills) {
+	console.log(json.skills[index]);
+}
+console.log(json.department.id);
+</script>
+</body>
+</html>

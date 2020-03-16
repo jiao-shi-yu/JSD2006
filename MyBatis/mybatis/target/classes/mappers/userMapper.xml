@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.mybatis.UserMapper">
+	<insert id="addnew">
+		INSERT INTO t_user
+		(username, password, age, phone, email)
+		VALUES
+		(#{username}, #{password}, #{age},
+		#{phone}, #{email})
+	</insert>
+	<delete id="deleteById">
+		DELETE FROM t_user WHERE id=#{id}
+	</delete>
+
+	<delete id="deleteByIds">
+		DELETE FROM t_user WHERE id in
+		<foreach collection="array" item="id" separator="," open="("
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+
+	<update id="updateEmailById">
+		UPDATE t_user SET email=#{arg0} WHERE id=#{arg1}
+	</update>
+
+	<update id="updatePassword">
+		UPDATE t_user SET password=#{password}
+	</update>
+
+	<select id="count" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_user;
+	</select>
+
+
+
+	<!-- <select id="findUserById" resultType="cn.tedu.mybatis.User"> SELECT 
+		* FROM t_user WHERE id = #{id} </select> -->
+
+	<resultMap type="cn.tedu.mybatis.User" id="userMap">
+
+		<result column="group_id" property="groupId" />
+
+	</resultMap>
+
+	<select id="findUserById" resultMap="userMap">
+
+		SELECT * FROM t_user WHERE id = #{id}
+
+	</select>
+
+
+
+
+
+	<select id="findUserByName" resultType="cn.tedu.mybatis.User">
+		SELECT * FROM t_user
+		WHERE username=#{username}
+	</select>
+	<select id="findUserByNameAndPassword"
+		resultType="cn.tedu.mybatis.User">
+		SELECT * FROM t_user WHERE username=#{username} AND
+		password=#{password}
+	</select>
+	<select id="findAllUsers" resultType="cn.tedu.mybatis.User">
+		SELECT * FROM t_user;
+	</select>
+	<select id="findUserOfMaxAge" resultType="cn.tedu.mybatis.User">
+		SELECT * FROM t_user
+		WHERE age = (SELECT MAX(age) FROM t_user);
+	</select>
+
+	<select id="find" resultType="cn.tedu.mybatis.User">
+		SELECT * FROM t_user
+		<if test="where != null">
+			${where}
+		</if>
+		<if test="orderBy != null">
+			${orderBy}
+		</if>
+		<if test="offset != null and count != null">
+			LIMIT #{offset}, #{count}
+		</if>
+	</select>
+
+	<select id="findAll" resultType="cn.tedu.mybatis.User">
+		SELECT id, username, password,
+		phone, email, group_id AS groupId
+		FROM t_user
+		ORDER by id
+	</select>
+
+
+
+	<select id="findUserVOById" resultType="cn.tedu.mybatis.UserVO">
+		SELECT t_user.id,
+		username, password, age, phone, email,
+		group_id AS groupId, name AS groupName
+		FROM t_user
+		LEFT JOIN t_group
+		ON t_user.group_id = t_group.id
+		WHERE t_user.id = #{id}
+	</select>
+
+
+
+</mapper>
+
