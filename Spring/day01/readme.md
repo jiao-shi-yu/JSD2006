@@ -18,13 +18,7 @@ Spring框架主要解决的问题是：**创建对象，并管理对象**。
 
 # 1. 新建Maven工程
 
-1. `New -> Maven Project`,
-2. 勾选`Create a simple Project`
-3. 点选Next
-    - `Group ld`为`cn.tedu`, 
-    - `Artifact Id`为`spring01`，
-    - `Packaging`选择`jar`即可。
-4. Finish
+
 
 # 2. 添加依赖:在`pom.xml`中添加`spring-context`的依赖
 
@@ -79,7 +73,6 @@ public class SpringTest {
         appliactionContext.close();
     }
 }
-
 ```
 
 ## 3.2 通过静态工厂方法创建对象
@@ -146,7 +139,7 @@ public class UserDaoFactory {
 
 代码如下所示:
 ```xml
-<bean id="userDaoFactory" class="cn.tedu.spring.UserDaoFActory"></bean>
+<bean id="userDaoFactory" class="cn.tedu.spring.UserDaoFactory"></bean>
 <bean id="userDao" class="cn.tedu.spring.UserDao"
     factory-bean="userDaoFactory" factory-method="newDaoInstance"></bean>
 ```
@@ -195,7 +188,7 @@ public class User {
 **当配置为默认的`scope="singleton"`时:**
 
 ```xml
-<bean id="user" class="cn.tedu.spring.user" scope="singleton"></bean>
+<bean id="user" class="cn.tedu.spring.User" scope="singleton"></bean>
 ```
 从Spring容器多次获取同一个类的实例对象,
 ```java
