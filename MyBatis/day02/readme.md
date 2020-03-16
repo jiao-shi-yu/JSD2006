@@ -128,12 +128,45 @@ org.apache.ibatis.binding.BindingException: Invalid bound statement (not found):
 ```
 
 
+# 13. 一对多的关联查询
+```
+select * from t_group
+```
+
+创建GroupVO类，用于封装查询结果：
+```java
+public class GroupVO {
+    private Integer id;
+    private String name;
+    private List<User> users;
+    // Setters & Getters
+    // toString()
+}
+```
+
+然后，创建`UserMapper`接口，定义相应的抽象方法。
 
 
-
-
-
-
+# 14. MyBatis总结
+- 简化持久层开发
+- 认识常用配置
+- 抽象方法的设计原则
+    - 返回值：增删改查返回`Integer`， 查询返回期望类型, 能封装查询结果即可。
+    - 方法名是自定义的，单不允许重载，多个方法名称必须不同。
+    - 参数列表: 根据执行SQL语句时的参数来设计。如果参数较多，可以将相关数据进行封装。如果抽象方法的参数超过一个，应该在每个参数之前添加`@Param`注解.
+- SQL语句怎么写：
+    - 根据需要执行的SQL语句的种类选择<insert>、<delete>等节点 每个节点都要有id属性
+    - <select> 节点必须配置 resultType或resultMap属性
+- `${}`和`#{}`
+- 掌握动态SQL中的<foreach>的使用
+- 了解动态SQL中的<if>和<choose>系列节点的使用
+- 理解实体类与"ValueObject"类的概念
+- 自定义别名
+    + 自行穷举字段列表时，查询的字段名与属性名不一致，就需要自定义别名以匹配。
+    + 多表连个查询时，两张表中的字段相同，也需要自定义别名，加以区分。
+- <resultMap>的使用场景：
+    + 查询时使用了*, 且查询结果的列表字段与封装类中的属性名不一致时。
+    + 多表查询，数据存在“多对一或一对多”关系时。
 
 
 
