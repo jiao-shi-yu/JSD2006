@@ -12,3 +12,42 @@
 
 # 2.在SpringMVC项目中响应正文
 在SpringMVC项目中，在控制器的处理请求的方法之前。添加`@Response`
+
+
+
+# 4. JSON数据格式
+JSON示例：
+```json
+{
+    "username":"root",
+    "password":"1234",
+    "age":24,
+    "phone":"138001183001",
+    "email":"root@tedu.cn",
+    "from":"Beijing",
+    "skills":["Java", "HTML", "JavaScript", "MySQL"],
+    "department":{
+        "id":6,
+        "name":"RD"
+    }
+}
+```
+关于JSON语法：
+- 每个JSON对象必须使用一堆大括号{}框住
+- 每个JSON数据是一个JSON对象
+- 每个JSON对象中可以配置若干个属性与值得对应关系；
+- 每组属性与值的对应关系用`:`分隔
+- 属性名都是字符串, 需要用`"  "`框住；
+- 属性值可以是任意类型, 如果是字符串类型，也需要使用一对儿`""`框住；
+
+
+
+6. 服务端向客户端响应JSON数据
+
+配置注解驱动
+```xml
+<mvc:annotation-driven></mvc:annotation-driven>
+```
+
+
+
