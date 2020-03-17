@@ -17,9 +17,9 @@ SpringBoot框架的核心思想是"约定大于配置":
         ```
     - 
 3. 从[Spring Initializr](https://start.spring.io/)开始项目.
-    ![Spring-initialzr.png]
+    ![一些简单的配置](Spring-initialzr.png)
     - 点击Genarate, 生成项目, 会自动下载。
     - 文件解压，移动到Eclipse的Workspace.
 
 # 2. Import Exist Maven Project
-- Maven: Update Project -> Force update;
+- Maven: Update Project -> Force update
