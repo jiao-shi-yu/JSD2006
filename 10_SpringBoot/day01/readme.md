@@ -215,7 +215,14 @@ mybatis.mapper-locations=classpath:mappers/*.xml
 
 建议在 insert 标签中，添加`useGenerateKeys=true`和`keyProperty=id`
 
+OKK
+控制台中输出：
+```
+User [id=null, username=springboot666, password=1234, age=19, phone=1384383838, email=spring@tedu.com]
 
+rows=1
+User [id=24, username=springboot666, password=1234, age=19, phone=1384383838, email=spring@tedu.com]
+```
 
 
 
