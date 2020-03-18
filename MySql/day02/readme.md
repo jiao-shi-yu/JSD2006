@@ -194,7 +194,75 @@ ORDER BY deptno ASC, sal DESC;
 
 ## 分页 `LIMIT`
 - 格式： `LIMIT 跳过条数, 每页显示条数`.
-1. 
+1. 查询员工表中第一页的5条数据，按照工资升序排序：
+```mysql
+SELECT * FROM emp
+ORDER BY sal ASC
+LIMIT 0, 5;
+```
+2. 查询员工表中第2页的5条数据,按照工资升序排序
+```mysql
+SELECT * FROM emp
+ORDER BY sal ASC
+LIMIT 5, 5;
+```
+3. 查询员工表中工资最高的员工信息
+```mysql
+SELECT * FROM emp
+ORDER BY sal DESC
+LIMIT 1;
+```
+4. 查询员工表中工资降序的第三页的3条数据
+```mysql
+SELECT * FROM emp
+ORDER BY sal
+LIMIT 6, 3;
+```
+5. 查询工资在1000到5000的员工信息，每页两条数据，查看第四页的数据
+```mysql
+SELECT * FROM emp
+WHERE sal BETWEEN 1000 AND 5000
+LIMIT 6, 2;
+```
+
+
+## 数值计算 `+ - * /`
+- 也正是因为`-`__是MySQL中的运算符__，所以创建数据或表时，`CHARACTER SET`或`CHAERSET`设置为`UTF8`，而不是~~`UTF-8`~~.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
