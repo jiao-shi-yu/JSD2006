@@ -16,6 +16,30 @@
 # 拆
 
 ## 2. 用户-创建数据表
+创建数据库和用户表：
+```mysql
+CREATE DATABASE tedu_store;
+USE tedu_store;
+CREATE TABLE t_user (
+    uid INT AUTO_INCREMENT COMMENT '用户id',
+    username VARCHAR(20) UNIQUE NOT NULL COMMENT '用户名',
+    passsword CHAR(32) NOT NULL COMMENT '密码',
+    salt CHAR(36) COMMENT '盐值',
+    phone VARCHAR(20) COMMENT '手机号码',
+    email VARCHAR(20) COMMENT '电子邮箱',
+    gender INT(1) COMMENT '性别：0-女，1-男',
+    avatar VARCHAR(100) COMMENT '头像',
+    is_delete INT(1) COMMENT '是否标记为删除：0-未删除，1-已删除',
+    created_user VARCHAR(20) COMMENT '创建人',
+    created_time DATETIME COMMENT '创建时间',
+    modified_user VARCHAR(20) COMMENT '最后修改人',
+    modified_time DATETIME COMMENT '最后修改时间',
+    PRIMARY KEY (uid)
+) DEFAULT CHARSET=utf8mb4;
+```
+
+`mostby4`
+
 ## 3. 用户-创建实体类
 ## 4. 用户-注册-持久层
 ## 5. 用户-注册-业务层
