@@ -23,7 +23,7 @@ USE tedu_store;
 CREATE TABLE t_user (
     uid INT AUTO_INCREMENT COMMENT '用户id',
     username VARCHAR(20) UNIQUE NOT NULL COMMENT '用户名',
-    passsword CHAR(32) NOT NULL COMMENT '密码',
+    password CHAR(32) NOT NULL COMMENT '密码',
     salt CHAR(36) COMMENT '盐值',
     phone VARCHAR(20) COMMENT '手机号码',
     email VARCHAR(20) COMMENT '电子邮箱',
@@ -41,7 +41,22 @@ CREATE TABLE t_user (
 `mostby4`
 
 ## 3. 用户-创建实体类
+
 ## 4. 用户-注册-持久层
+application.properties添加配置：
+```
+server.port=8080
+
+spring.datasource.url=jdbc:mysql://localhost:3306/tedu_store?useUnicode=true&characterEncoding=utf8&serverTimeZone=Asia/Shanghai
+spring.datasource.driver=com.mysql.cj.jdbc.Driver
+spring.datasource.username=root
+spring.datasource.password=uiop7890
+
+mybatis.mapper-locations=classpath:mappers/*.xml
+```
+
+# java单元测试：注意不要导错包
+是`org.junit.Test`， 而不是`org.junit.jupiter.api.Test;`。
 ## 5. 用户-注册-业务层
 ## 6. 用户-注册-控制器层
 ## 7. 用户-注册-页面
