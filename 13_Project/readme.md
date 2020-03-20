@@ -56,9 +56,37 @@ mybatis.mapper-locations=classpath:mappers/*.xml
 ```
 
 # java单元测试：注意不要导错包
-是`org.junit.Test`， 而不是`org.junit.jupiter.api.Test;`。
+是`org.junit.Test`， 而不是`org.junit.jupiter.api.Test;`。另外，测试方法要用`public`修饰。
+
 ## 5. 用户-注册-业务层
+# `commons-codec`提供更多摘要算法的API。
+添加依赖:
+
+```xml
+<dependency>
+    <groupId>commons-codec</groupId>
+    <artifactId>commons-codec</artifactId>
+</dependency>
+```
+调用DigestUtils提供的摘要算法。
+```java
+import org.apache.commons.codec.digest.DigestUtils;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class StoreApplicationTests {
+    @Test
+    public void sha1HaxTest() {
+        String password = "123456";
+        String md5Password = DigestUtils.sha1Hex(password.getBytes());
+        System.err.println(md5Password);
+    }
+}
+```
+控制台输出：`7c4a8d09ca3762af61e59520943dc26494f8941b`.
+
 ## 6. 用户-注册-控制器层
+
 ## 7. 用户-注册-页面
 ## 8. 用户-登录-持久层
 ## 9. 用户-登录-业务层
