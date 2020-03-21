@@ -18,9 +18,7 @@
 数据表-->实体类-->业务-->控制器-->页面。
 
 
-# 拆
-
-## 2. 用户-创建数据表
+## 2. 创建用户数据表
 创建数据库和用户表：
 ```mysql
 CREATE DATABASE tedu_store;
@@ -43,9 +41,36 @@ CREATE TABLE t_user (
 ) DEFAULT CHARSET=utf8mb4;
 ```
 
-`mostby4`
+>UTF-8编码在MySQL中有utf8mb3(most byte 3)和utf8mb4(most byte 4)这2种，如果在SQL语句中直接使用utf8，则表示utf8mb3.
+推荐使用v5.5以上版本的MySQL。  
 
-## 3. 用户-创建实体类
+
+
+## 3. 创建用户实体类
++ 先创建一个`BaseEntiy`类，作为实体类的基类。基类中有四个属性。然后还实现了`Serializable`接口，便于Spring框架通过反射技术实例化这个类的实例对象。
+```java
+package cn.tedu.store.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+abstract class BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = -3122958702938259476L;
+
+    
+    private String createdUser;
+    private Date createdTime;
+    private String modifiedUser;
+    private Date modifiedTime;
+    
+    // Setters and Getters
+
+    // toString()
+    
+}
+```
+然后创建一个`User`类
 
 ## 4. 用户-注册-持久层
 application.properties添加配置：
@@ -99,6 +124,30 @@ public class StoreApplicationTests {
 控制台输出：`7c4a8d09ca3762af61e59520943dc26494f8941b`.
 
 注册和登录都需要对密码进行加密。所以单独的创建一个`public String getMd5Password(String password, String salt)`方法。
+
+
+### Spring来统一处理异常
+同样的异常可能会在多个业务中出现，且对应的处理方式是相同的。
+
+SpringMVC提供了统一处理异常的机制。
+
+具体做法：
++ 先定义一个统一处理异常的方法
+    - 用`@ExceptionHandler`注解，标记这是一个异常处理的方法。
+    - 应该使用`public`权限
+    - 必须包含一个`Exception`类型的参数，以供框架捕获使用。
+    - 
+```java
+@ExceptionHandler
+public JsonResult<Void> aaa(Exception e) {
+
+}
+
+
+
+
+
+
 
 
 
