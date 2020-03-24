@@ -70,8 +70,7 @@ abstract class BaseEntity implements Serializable {
     
 }
 ```
-然后创建一个`User`类，继承自实体类
- 
+然后创建一个`User`类
 
 ## 4. 用户-注册-持久层
 application.properties添加配置：
@@ -140,9 +139,10 @@ SpringMVC提供了统一处理异常的机制。
     - 
 ```java
 @ExceptionHandler
-public JsonResult<Void> aaa(Throwable e) {
+public JsonResult<Void> aaa(Exception e) {
 
 }
+```
 
 
 
