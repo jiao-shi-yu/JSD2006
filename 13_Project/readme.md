@@ -146,9 +146,29 @@ public JsonResult<Void> aaa(Exception e) {
 
 
 
+#### 上传头像
+
+2. 规划异常: 不需要，因为操作很简单，几乎不会出错啊
+3. `UserService`中添加抽象方法
+4. `UserServiceImpl`中实现抽象方法
+```java
+/**
+ uid, username, 用户ID和用户名；String avatar 是路径。
+```
 
 
+## 27.2 在控制器中处理文件上传
+
+在处理请求的方法中，添加`MultipartFile`接口的参数。
+
+这里的`MultipartFile`既封装了用户上传的文件，又封装了文件的一些信息，比如`file.getOrigalFileName()`。
 
 
+## 27.3 `MultipartFile`接口提供的API
++ `String getOriginalFileName()`:获取文件的原始文件名。
++ `boolean isEmpty()`:上传表单中未选择文件就提交，或选择的文件大小为0
++ `long getSize()`:
++ `String getContentType`: 获取文件MIME类型
++ `void transferTo(File dest)`:将客户端上传的文件数据保存到服务器的某个文件中。
 
 

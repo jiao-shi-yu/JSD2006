@@ -131,7 +131,7 @@ DELETE FROM person WHERE age = 20;
 DELETE FROM person WHERE name='Tom';
 DELETE FROM person;
 ```
-
+注意是`DELETE FROM`后面直接跟表名。
 
 
 
