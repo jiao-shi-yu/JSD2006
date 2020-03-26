@@ -173,3 +173,130 @@ public JsonResult<Void> aaa(Exception e) {
 + `void transferTo(File dest)`:将客户端上传的文件数据保存到服务器的某个文件中。
 
 
+## 27.4 修改上传文件下载的限制
+SpringBoot框架，限制了文件上传大小。
+有两种解决方案：
+### 在包含`@Configure`注解的类中配置
+1. 在启动类中，更改上传文件的大小限制
+```java
+    // 定义全局的上传文件大小限制
+    /**
+     * 获取MultipartConfigElement
+     */
+    @Bean
+    public MultipartConfigElement getMultipartConfigElement() {
+        // 当前项目中 无论上传的是什么 都不允许超过100M， 若超过，则控制器不会执行。
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        DataSize dataSize = DataSize.ofMegabytes(100);
+        factory.setMaxFileSize(dataSize);
+        factory.setMaxRequestSize(dataSize);
+        return factory.createMultipartConfig();
+    }
+```
+主要使用到启动类的`@Configuration`注解，你自己写个类添加`@Configuration`注解，然后在自己写的类中添上面代码，也可以。
+
+
+
+2. 在__application.properties__中添加配置信息：
+根据SpringBoot版本添加不同的信息：
+SpringBoot v1.4之前
+```
+multipart.maxFileSize=10MB          // 单个文件大小不得超过10MB
+multipart.maxRequestSize=100MB      // 单次请求文件不得超过100MB
+```
+SpringBoot v1.4之后
+```
+spring.http.multipart.maxFileSize=10MB
+spring.http.multipart.maxReqeustSize=100MB
+```
+SpringBoot v2.0之后
+```
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=100MB
+```
+
+## 27.5 一次上传多个文件
+
+
+
+
+### 上传数量固定的文件
+```html
+<form method="post" enctype="multipart/form-data" action="">
+    <p>
+    请选择身份证的正面照片：<input type="file" name="file1"/>
+    </p>
+    <p>
+    请选择身份证的反面照片：<input type="file" name="file2"/>
+    </p>
+</form>
+```
+上传数量固定的文件时，控制器中，处理请求的方法中使用两个参数来表示两个不同的文件即可：
+```java
+public JsonResult<?> upload(MultipartFile file1, MultipartFile file2) {
+    // 处理第一个文件
+    // 处理第二个文件
+}
+```
+
+### 上传数量不固定的文件
+如果上传文件的数量在一定范围内不可控，例如微信朋友圈最多9张，但是你上传一张也可以。
+再比如说，网购之后的买家秀，也是不定数量的图片。
+
+针对这种情况，可以采取的做法，有
+
+- 使用多个同名的上传控件。
+```xml
+<form method="post" enctype="multipart/form-data" action="">
+    <p>
+    请选择身份证的正面照片：<input type="file" name="file"/>
+    </p>
+    <p>
+    请选择身份证的反面照片：<input type="file" name="file"/>
+    </p>
+</form>
+```
+一场代码中，使用的多个上传控件的`name`是相同的！在前端页面中，还可以使用JS技术动态添加更多的控件。
+
+- 直接在上传控件上添加`multiple="multiple"`属性
+```html
+<form method="post" enctype="multipart/form-data" action="">
+    <p>请选择上传的图片：
+    <input type="file" name="file" mutliple="multiple"/>
+    </p>
+</form>
+```
+就可以一次上传多个文件。
+
+在控制器处理请求的方法中，上传文件的参数对象应该声明为数组格式。例如：
+```java
+public JsonResult<?> upload(MultipartFile[] files) {
+    // 遍历files, 处理每一个file
+
+
+}
+```
+
+
+## 27.6 在前端页面使用`$.ajax()`函数实现异步上传
+
+使用`$.ajax()`函数实现__上传文件__功能时，需要注意：
+- `data`属性，必须是`new FromData(表单)`;
+- 另外添加两个属性`"contentType":false`和`"processData":false`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
