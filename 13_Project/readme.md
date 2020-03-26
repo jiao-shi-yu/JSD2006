@@ -304,7 +304,147 @@ public JsonResult<?> upload(MultipartFile[] files) {
 其中`$("#form-upload")`得到的结果是一个元素为`Form`的数组，通过`[0]`来访问数组当中的第一个元素。
 
 
+# 作业
+1. 创建收货地址数据表
+```mysql
+CREATE TABLE t_address (
+    aid INT     AUTO_INCREMENT PRIMARY KEY COMMENT "收货地址id",
+    uid INT     COMMENT "归属用户的id",
+    name    VARCHAR(20)      COMMENT "收货人姓名",
+    province_name   CHAR(6)      COMMENT "省",
+    province_code   CHAR(6)     COMMENT "省代号",
+    city_name   VARCHAR(15)     COMMENT "市",
+    city_code   CHAR(6)     COMMENT "市代号",
+    area_name   VARCHAR(15)     COMMENT "区",
+    area_code   CHAR(6)     COMMENT "区代号",
+    zip CHAR(6)     COMMENT "邮政编码",
+    address VARCHAR(50)     COMMENT "详细地址",
+    phone   VARCHAR(20)     COMMENT "电话",
+    tel VARCHAR(20)     COMMENT "固话",
+    tag VARCHAR(10)     COMMENT "地址类型",
+    is_default  INT(1)      COMMENT "是否默认：0-非默认， 1-默认",
+    created_user    VARCHAR(20)     COMMENT "创建人",
+    created_time    DATETIME        COMMENT "创建时间",
+    modified_user   VARCHAR(20)     COMMENT "最后修改人",
+    modified_time   DATETIME        COMMENT "最后修改时间"
+) DEFAULT CHARSET=utf8mb4;
+```
+2. 创建收货地址实体类
+```java
+package cn.tedu.store.entity;
 
+import java.util.Date;
+
+public class Address extends BaseEntity {
+    /**
+     * Generated Serial id
+     */
+    private static final long serialVersionUID = 3807707125821455168L;
+    // Properties
+
+    // Getters and Setters
+    
+    // toString()
+
+}
+
+```
+3. 持久层-插入数据
+先创建个`AddressMapper`的接口，然后创装一个`AddressMapper.xml`的配置文件，
+最后创建一个`AdressMapperTest`的测试类。
+```java
+package cn.tedu.store.mapper;
+
+public interface AddressMapper {
+
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.store.mapper.AddressMapper">
+
+</mapper>
+```
+并在`AddressMapperTests`中引用一个`AddressMapper`实现类的实例对象
+```java
+
+package cn.tedu.store;
+
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import cn.tedu.store.mapper.AddressMapper;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class AddressMapperTests {
+    @Autowired
+    private AddressMapper mapper;
+    
+}
+
+```
+开始实现插入数据的功能：
+`UserMapper`接口中简单声明一个方法：
+```java
+
+```
+__UserMapper.xml__配置文件中写好SQL语句:
+```xml
+    <insert id="addNew" useGeneratedKeys="true" keyProperty="uid">
+        INSERT
+        INTO t_address(
+        aid,
+        uid,
+        name,
+        province_name,
+        province_code,
+        city_name,
+        city_code,
+        area_name,
+        area_code,
+        zip CHAR(6),
+        address,
+        phone,
+        tel,
+        tag,
+        is_default,
+        created_user,
+        created_time,
+        modified_user,
+        modified_time
+        )
+        VALUES
+        (
+        #{aid},
+        #{uid},
+        #{name},
+        #{province_name},
+        #{province_code},
+        #{city_name},
+        #{city_code},
+        #{area_name},
+        #{area_code},
+        #{zip},
+        #{address},
+        #{phone},
+        #{tel},
+        #{tag},
+        #{is_default},
+        #{created_user},
+        #{created_time},
+        #{modified_user},
+        #{modified_time}
+        )
+    </insert>
+```
+
+4. 持久层-根据uid删除收货地址
 
 
 
