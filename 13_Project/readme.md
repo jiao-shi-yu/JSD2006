@@ -287,9 +287,21 @@ public JsonResult<?> upload(MultipartFile[] files) {
 
 
 
+>$().click(); > 遍历整个数组，为数组中的每一个标签都绑定单击事件的响应函数。
 
 
-
+```html
+<script type="text/javascript">
+    $("#btn-change-avatar").click(function() {
+        $.ajax({
+            "url":"/users/avatar/change",
+            "data":new FormData($("#form-upload")[0])
+            //......
+         })
+    })
+ </script>
+```
+其中`$("#form-upload")`得到的结果是一个元素为`Form`的数组，通过`[0]`来访问数组当中的第一个元素。
 
 
 
