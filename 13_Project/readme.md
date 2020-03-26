@@ -167,7 +167,8 @@ public JsonResult<Void> aaa(Exception e) {
 ## 27.3 `MultipartFile`接口提供的API
 + `String getOriginalFileName()`:获取文件的原始文件名。
 + `boolean isEmpty()`:上传表单中未选择文件就提交，或选择的文件大小为0
-+ `long getSize()`:
++ `long getSize()`: 获取上传的文件的大小，以字节为单位。
++ `InputStream getInputStream()`: 获取输入流。
 + `String getContentType`: 获取文件MIME类型
 + `void transferTo(File dest)`:将客户端上传的文件数据保存到服务器的某个文件中。
 
