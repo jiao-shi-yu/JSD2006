@@ -304,8 +304,7 @@ public JsonResult<?> upload(MultipartFile[] files) {
 其中`$("#form-upload")`得到的结果是一个元素为`Form`的数组，通过`[0]`来访问数组当中的第一个元素。
 
 
-# 作业
-1. 创建收货地址数据表
+# 28. 创建收货地址数据表
 ```mysql
 CREATE TABLE t_address (
     aid INT     AUTO_INCREMENT PRIMARY KEY COMMENT "收货地址id",
@@ -329,7 +328,7 @@ CREATE TABLE t_address (
     modified_time   DATETIME        COMMENT "最后修改时间"
 ) DEFAULT CHARSET=utf8mb4;
 ```
-2. 创建收货地址实体类
+# 29. 创建收货地址实体类
 ```java
 package cn.tedu.store.entity;
 
