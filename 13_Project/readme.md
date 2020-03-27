@@ -446,6 +446,136 @@ __UserMapper.xml__配置文件中写好SQL语句:
 4. 持久层-根据uid删除收货地址
 
 
+# 32. 收货地址-业务层
+
+1. 规划并创建异常。
+
+
+
+
+
+
+
+
+# 35. 导入省市区数据表
+```mysql
+mysql> source /Users/yuyu/Downloads/PROJECT_DAY07_ALL_1750/t_dict_district.sql 
+mysql> show tables;
++----------------------+
+| Tables_in_tedu_store |
++----------------------+
+| t_address            |
+| t_dict_district      |
+| t_user               |
++----------------------+
+3 rows in set (0.00 sec)
+```
+dict:字典
+district:地区
+
+# 36. 省市区-创建实体类
+创建`cn.tedu.store.entity.District`地区实体类。
+```java
+public class District implements Serializable {
+    // Serial Version UID
+    // Properties
+    private Integer id;
+    private String parent;
+    private String code;
+    private String name;
+    // Getters and Setters 
+    // 基于id的hashCode()与equals()
+    // toString
+}
+```
+# 36. 省市区-显示列表-持久层
+
+
+
+1. 分析规划需要执行的SQL语句
+获取全国所有省/某省所有市/某市所有区的列表，需要执行的SQL语句大致是：
+```mysql
+SELECT * FROM t_dict_district WHERE parent=? ORDER BY code ASC;
+```
+
+
+# 37. 省市区-显示列表-业务层
+
+2. 接口与抽象方法
+```java
+public interface DistrictService {
+    List<District> getByParent(String parent);
+}
+```
+
+3. 创建`DistrictServiceImpl`作为`DistrictService`的实现类。添加`@Service`注解，并在类中添加`@Autowired private DistrictMapper districtMapper;`持久层对象。
+```java
+package cn.tedu.store.service.impl;
+
+@Service
+public class DistrictServiceImpl implements DistrictService {
+
+    @Override
+    public List<District> getByParent(String parent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+}
+```
+然后开始写业务：
+
+
+# 38. 省市区-显示列表-控制器层
+1. 处理异常： 无
+2. 设计需要处理的请求
+- 请求路径：`/districts/`
+- 请求参数：`String parent`
+- 使用Session：否
+- 请求类型：`GET`
+- 相应数据：`JsonResult<List<Distirct>>`
+- 是否拦截：`否`
+3. 处理请求
+- 在拦截器的配置类`InterceptorConfigration`中，将`/districts/**`添加到白名单。
+```java
+patterns.add("/districts/**");
+registy.addInterceptor(interceptor).addPathPatterns("/**").excludePathPatterns(patterns);
+```
+- 创建`DistrictController`继承自`BaseController`，在类的声明之前添加`@RestController`和`@RequestMapping("districts")`注解。并添加业务层对象`@Autowired private AddressService addressService`。
+```java
+@RestController
+@RequestMapping("district")
+public class DistrictController extends BaseController {
+    @Autowired
+    private DistrictService districtService;
+    
+    @GetMapping
+    public JsonResult<List<District>> getByParent(String parent) {
+        List<District> data = districtService.getByParent(parent);
+        return new JsonResult<>(SUCCESS, data);
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
