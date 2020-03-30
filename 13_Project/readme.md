@@ -659,6 +659,33 @@ SELECT * FROM t_address WHERE uid=? ORDER BY modified_time DESC LIMIT 0, 1;
 
 
 
+# 46. 收货地址-业务层-设为默认地址功能实现
+1. 规划业务流程，创建异常
+- 先检查要设置的地址在数据库中是否存在，若地址不存在，则抛出`AddressNotFoundException`;
+- 然后判断要设为默认的地址是否为当前登录用户的地址。如果不是，则抛出`AccessDeniedException`;
+- 更新数据操作室，有可能会出错，抛出`UpdateException`这个异常类已经存在了，不用新创建。
++ 所以需要创建的异常类，有`AddressNotFoundException`和`AccessDeniedException`.
+
+
+
+2. 设计抽象方法
+在`AddressService`中添加抽象方法:
+```java
+    /**
+    * 设置默认收货地址
+    */
+    void setDefualt(Integer aid, Integer uid, String username);
+```
+3. 实现抽象方法并测试
+在`AddressServiceImpl`中实现`setDefault`方法。
+```java
+public void setDefault(Integer aid, Integer uid, String username) {
+    // 判断收货地址是否在数据库中存在
+    // 判断是否为当前登录用户的收货地址
+    // 
+}
+```
+
 
 
 
