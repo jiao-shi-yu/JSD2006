@@ -558,6 +558,34 @@ public class DistrictController extends BaseController {
 ```
 
 
+# Chrome快捷键 command option + J 控制台 command option + C 选择器
+
+
+
+
+
+# 44. 收货地址 - 显示列表 - 持久层
+1. 分析要执行的SQL语句
+显示收货地址列表，需要执行的SQL语句大致是:
+```mysql
+SELECT * FROM t_address WHERE uid = ? ORDER BY is_default DESC modifiedTime DESC;
+```
+2. 接口与抽象方法
+在`AddressMapper`接口中添加抽象方法：
+```java
+List<Address> findByUid(Integer uid);
+```
+3. 配置映射
+在__AddressMapper.xml__中，配置映射：
+```xml
+<resultMap id="AddressEntityMap" type="cn.tedu.store.entity.Address">
+    <id .../>
+    <result .../>
+</resultMap>
+<select id="findByUid" resultMap="AddressEntityMap">
+    SELECT * FROM t_address WHERE uid = #{uid} ORDER BY is_default DESC modifiedTime DESC;
+</select>
+```
 
 
 
@@ -566,12 +594,66 @@ public class DistrictController extends BaseController {
 
 
 
+4. 实现抽象方法
+在`AddressService`中，添加抽象方法：
+```java
+public List<Address> getByUid(Integer uid);
+```
+在`AddressServiceImpl`中规划以上方法的实现：
+```java
+public List<Address> getByUid(Integer uid) {
+    // 基于uid调整持久层的findById()查询得到收货地址的列表数据
+    // 遍历查询到的收货地址的数据
+    // 将遍历到的对象不需要显示在页面上的属性设置为null
+    // uid provinceCode cityCode areaCode is
+    // 返回收货地址列表
+}
+```
 
 
-
-
-
-
+# 作业:
+1. 将指定的收货地址设置为默认收货地址
+需要执行的SQL语句大致是:
+```mysql
+UPDATE t_address SET is_default=1, modified_user=?, modified_time=? WHERE aid = ?
+```
+抽象方法应该设计为：
+```java
+Integer updateDefaultByAid (
+    @Param("aid") Integer aid,
+    @Param("modifiedUser") String modifiedUser,
+    @Param("modifiedTime") Date modifiedTime
+)
+```
+2. 将用户的默认收货地址取消掉
+```mysql
+UPDATE t_address SET is_default=0 WHERE uid=?
+```
+抽象方法应该设计为：
+```java
+Integer updateNoneDefaultByUid(Integer uid);
+```
+### 先执行2 再执行1
+3. 根据收货地址id查询收货地址详情
+需要执行的SQL语句：
+```mysql
+SELECT * FROM t_address WHERE uid=?
+```
+抽象方法应该设计为：
+```java
+Address findByAid(Integer aid);
+```
+4. 根据收货地址id删除收货地址数据
+```mysql
+DELETE FROM t_address WHERE aid=?
+```
+5. 查询某用户最后修改的收货地址数据
+```mysql
+SELECT * FROM t_address WHERE uid=? ORDER BY modified_time DESC LIMIT 0, 1;
+```
+6. 将t_products.sql脚本导入到数据库中
+7. 在项目中创建数据的实体类`Product`
+8. 根据商品id查询商品数据详情
 
 
 
