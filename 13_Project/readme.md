@@ -686,6 +686,201 @@ public void setDefault(Integer aid, Integer uid, String username) {
 }
 ```
 
+# 64. 购物车-创建数据表
+```mysql
+CREATE TABLE t_cart (
+    cid INT AUTO_INCREMENT COMMENT'购物车数据id',
+    uid INT COMMENT '用户id',
+    pid INT COMMENT '商品id',
+    num INT COMMENT '商品数量',
+    price BIGINT(20) COMMENT '加入购物车时商品单价',
+    created_user VARCHAR(20) COMMENT '创建人',
+    created_time DATETIME COMMENT '创建时间',
+    modified_user VARCHAR(20) COMMENT '最后修改人',
+    modified_time DATETIME COMMENT '最后修改时间',
+    PRIMARY KEY (cid)
+) DEFAULT CHARSET=utf8mb4;
+```
+
+# 65. 购物车-创建实体类
+在`cn.tedu.store.entity`包中创建`Cart`购物车实体类。
+```java
+public class Cart extends BaseEntity {
+    
+    private static final long serialVersionUID = -9051846958681813039L;
+    private  Integer cid;
+    private Integer uid;
+    private Integer pid;
+    private Integer num;
+    private Long price;
+   
+    // Getters and Getters / toString() / hashCode() equals()
+}
+```
+# 66. 加入购物车-持久层
+## 1. 分析需要执行的SQL语句
+将商品添加到购物车，具体分为两种情况：一种情况是第一次将该商品添加到购物车，另一种情况是购物车中已经存在该商品，此时点击【添加到购物车】，表现的结果应当是，在购物车中增加购买数量。
+
+### 所以，需要先判断：__购物车中是否已经存在了该商品__。  
+需要执行的SQL语句是：
+```mysql
+SELECT * FROM t_cart WHERE uid=? and pid=?;
+```
+
+### 如果查询到的结果为`null`，说明购物车中不存在该商品。就需要插入新的购物车数据。
+```mysql
+INSERT INTO t_cart 
+    
+VALUES 
+
+```
+
+### 如果查询到的结果不为`null`，说明购物车中之前已经添加了该商品，此时需要增加商品数量
+```mysql
+UPDATE t_cart SET num=?, modified_user=?, modified_time=? 
+WHERE cid=?
+```
+
+## 2. 设计抽象方法
+在`cn.tedu.store.mapper`中创建`CartMapper`接口，并添加抽象方法；
+```java
+public interface CartMapper {
+    /**
+     * 插入购物车数据
+     */
+    Integer insert(Cart cart);
+    
+    /**
+     * 修改购物车中商品的数量
+     */
+    Integer updateNumByCid(
+        @Param("cid") Integer cid,
+        @Param("num") Integer num,
+        @Param("modifiedUser") String modifiedUser,
+        @Param("modifiedTime") Date modifiedTime
+    );
+    
+    /**
+     * 查询用户在购物车添加的某样商品的详情
+     */
+    Cart findByUidAndPid(
+        @Param("uid") Integer uid,
+        @Param("pid") Integer pid
+    );   
+}
+```
+## 3. 配置映射、测试映射
+在 __src/main/resources/mappers/__ 下复制粘贴，得到 __CartMapper.xml__文件，在其中配置映射。
+```xml
+<mapper namespace="cn.tedu.store.mapper.CartMapper">
+    
+    <!--  
+     * 插入购物车数据
+    Integer insert(Cart cart);
+    -->
+    <!-- cid是自动生成的 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO t_cart (
+            uid, pid, num, price,
+            created_user, created_time, modified_user, modified_time
+        ) VALUES (
+            #{uid}, #{pid}, #{num}, #{price},
+            #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime}
+        );
+    </insert>
+    
+    <!--  
+     * 修改购物车中商品的数量
+    Integer updateNumByCid(
+        @Param("cid") Integer cid,
+        @Param("num") Integer num,
+        @Param("modifiedUser") String modifiedUser,
+        @Param("modifiedTime") Date modifiedTime
+    );
+    -->
+    <update id="updateNumByCid">
+        UPDATE 
+            t_cart
+        SET 
+            num=#{num},
+            modified_user=#{modifiedUser},
+            modified_time=#{modifiedTime},
+        WHERE
+            cid=#{cid}
+    </update>
+    
+    <!--  
+     * 查询用户在购物车添加的某样商品的详情
+    Cart findByUidAndPid(
+        @Param("uid") Integer uid,
+        @Param("pid") Integer pid
+    ); 
+    -->
+    <select id="findByUidAndPid" resultType="cn.tedu.store.entity.Cart">
+        SELECT * FROM t_cart WHEE uid=#{uid} AND pid=#{pid}
+    </select>
+</mapper>
+```
+# 66. 加入购物车-业务层
+
+
+# 作业： ------> 显示购物车列表-持久层
+ 
+查询购物车列表，需要执行的SQL语句为：
+```mysql
+SELECT * FROM t_cart WHERE uid = ? ORDER BY created_time DESC;
+```
+>是根据添加日期，而不是修改日期来的。
+
+页面中需要显示图片等，所以需要`t_cart`关联`t_product`一起查询：
+```mysql
+SELECT * FROM t_cart 
+LEFT JOIN t_product
+ON t_cart.pid = t_product.id
+WHERE uid=? 
+ORDER BY created_time DESC;
+```
+
+对应
+
+
+
+关联查询时并没有合适的实体类来封装查询结果，还需要创建专门的__Value Object__类来封装借查询结果。
+
+- 创建一个`CartVO`类:
+```java
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
