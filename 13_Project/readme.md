@@ -852,25 +852,104 @@ ORDER BY created_time DESC;
 
 ```
 
+# 确认订单页-显示勾选的购物车商品-持久层
+1. 规划SQL语句
+用在购物车显示页面中勾选商品，选择结算，就会跳转到确认订单页面。
+在__确认订单页面__中需要显示的有：收货地址和购物车数据。这些数据是从购物车页面传递过来的。
+需要执行的SQL语句：
+```mysql
+SELECT * FROM t_cart WHERE cid IN (1, 2, 3);
+```
+从购物车数据表中查询信息：
+```mysql 
+SELECT
+    cid, uid, pid, t_cart.num, t_cart.price,
+    title, iamge, t_product.price AS realPrice
+FROM 
+    t_cart
+LEFT JOIN
+    t_product
+ON
+    t_cart.pid = t_product.id
+WHERE 
+    uid=#{uid} AND cid IN (?,?)
+ORDERY BY 
+    t_cart.created_time DESC
+```
+2. 接口与抽象方法
+在`CartMapper`中添加抽象方法:
+```java
+List<CartVO> findVOsByCids(
+    @Param("uid") uid,
+    @Param("cids") Integer[] cids
+)
+```
+3. 配置映射
+在__CartMapper.xml__中配置映射:
+```xml
 
+<!-- List<CartVO> findVOsByCids -->
+<select id="findVOsByCids" resultType="cn.tedu.store.vo.CartVO">
+    SELECT 
+        cid, uid, pid, t_cart.num, t_cart.price,
+        title, t_product.price AS realPrice, image
+    FROM 
+        t_cart 
+    LEFT JOIN
+        t_product 
+    ON 
+        t_cart.pid=t_product.id 
+    WHERE 
+        uid=#{uid}
+        AND 
+        cid IN 
+        <foreach collection="cids" item="cid" separator="," open="(" close=")">
+            #{cid}
+        </foreach>
+    ORDER BY
+        t_cart.created_time DESC
+</select>
+```
 
+# 83.确定订单页-业务层
+## 返回给页面订单商品信息
+```java
+    @Override
+    public List<CartVO> getVOByCids(Integer uid, Integer[] cids) {
+        List<CartVO> carts = cartMapper.findVOsByCids(uid, cids);
+        Iterator<CartVO> it = carts.iterator();
+        while(it.hasNext()) {
+            CartVO cart = it.next();
+            if (!cart.getUid().equals(uid)) {
+                it.remove();
+            }
+        }
+        if (carts.size() == 0) {
+            throw new CartNotFoundException("获取购物车数据失败！");
+        }
+        return carts;
+    }
+```
 
 # 84. 确认订单页-控制器层
+
 1. 业务分析：
-- 请求路径：`/carts/get_by_cids`
-- 请求参数：`Integer[] cids`, `HttpSession session`
+- 请求路径：`/carts/selected`
+- 请求参数：`Integer[] cids`,
+- 使用Session获取uid：`HttpSession session`
 - 请求方式：`GET`
 - 响应数据:`JsonResult<List<CartVO>>`
 2. 业务实现：
 ```java
-    // http://localhost:8080/carts/get_by_cids?cids=8&cids=9
-    @GetMapping("get_by_cids")
+    // http://localhost:8080/carts/selected?cids=8&cids=9
+    @GetMapping("selected")
     public JsonResult<List<CartVO>> getByCids(Integer[] cids, HttpSession session) {
         Integer uid = getUidFromSession(session);
         List<CartVO> data = cartService.getVOByCids(uid, cids);
         return new JsonResult<>(SUCCESS, data);
     }
 ```
+>如果url中存在多个同名的请求参数，SpringMVC框架会把这些参数的值封装为一个数组。
 浏览器得到的Json数据为：
 ```json
 {"state":2000,"data":[{"cid":9,"uid":35,"pid":10000003,"num":3,"price":13,"realPrice":13,"title":"广博(GuangBo)16K115页线圈记事本子日记本文具笔记本图案随机","image":"/images/portal/01GuangBo16K115FB60506/"},{"cid":8,"uid":35,"pid":10000001,"num":13,"price":23,"realPrice":23,"title":"广博(GuangBo)10本装40张A5牛皮纸记事本子日记本办公软抄本GBR0731","image":"/images/portal/00GuangBo1040A5GBR0731/"}]}
@@ -884,18 +963,55 @@ ORDER BY created_time DESC;
     八戒   家   北京市房山区高老庄3排6号   1380***1234
     ```
 - 订单页面中显示购物车中选中的商品信息：
-
-- 在`orderConfirm.html`中，向`http://localhost:8080/carts/selected`
-发出请求，并给出若干个`cids`的值，获取到对应的购物车数据，显示在页面中即可！
+    + 在`orderConfirm.html`中，向`http://localhost:8080/carts/selected`发出请求，
+并给出若干个`cids`的值，获取购物车的勾选数据，显示在确认订单页面中即可！
 
 
 ## 具体实现：
 ### 1. 实现显示收货地址的功能:
-在Sr
+
+```javascript
+// 在上面的<select>标签上添加id属性，值为address-list。
+$(document).ready(function() {
+    showAddressList();
+}) 
+function showAddressList() {
+    $("#address-list").empty();
+    $.ajax({
+        "url" : "/addresses",
+        "type" : "get",
+        "dataType" : "json",
+        "success" : function(json) {
+            console.log("count=" + json.data.length);
+            for (let i = 0; i < json.data.length; i++) {
+                console.log(json.data[i]);
+                let html = '<option value="#{aid}">#{name}&nbsp;&nbsp;&nbsp;#{tag}&nbsp;&nbsp;&nbsp;#{province}#{area}#{address}&nbsp;&nbsp;&nbsp;#{phone}</option>';
+                html = html
+                        .replace(/#{aid}/g, json.data[i].aid);
+                html = html
+                        .replace(/#{tag}/g, json.data[i].tag);
+                html = html.replace(/#{name}/g,
+                        json.data[i].name);
+                html = html.replace(/#{province}/g,
+                        json.data[i].provinceName);
+                html = html.replace(/#{area}/g,
+                        json.data[i].areaName);
+                html = html.replace(/#{address}/g,
+                        json.data[i].address);
+                html = html.replace(/#{phone}/g,
+                        json.data[i].phone);
+                $("#address-list").append(html);
+            }
+        }
+    })  
+}
+```
+
+### 在确认订单页面中显示购物车中选中的商品信息
+```javascript
 
 
-
-
+```
 
 
 
