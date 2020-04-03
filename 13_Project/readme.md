@@ -855,7 +855,43 @@ ORDER BY created_time DESC;
 
 
 
+# 84. 确认订单页-控制器层
+1. 业务分析：
+- 请求路径：`/carts/get_by_cids`
+- 请求参数：`Integer[] cids`, `HttpSession session`
+- 请求方式：`GET`
+- 响应数据:`JsonResult<List<CartVO>>`
+2. 业务实现：
+```java
+    // http://localhost:8080/carts/get_by_cids?cids=8&cids=9
+    @GetMapping("get_by_cids")
+    public JsonResult<List<CartVO>> getByCids(Integer[] cids, HttpSession session) {
+        Integer uid = getUidFromSession(session);
+        List<CartVO> data = cartService.getVOByCids(uid, cids);
+        return new JsonResult<>(SUCCESS, data);
+    }
+```
+浏览器得到的Json数据为：
+```json
+{"state":2000,"data":[{"cid":9,"uid":35,"pid":10000003,"num":3,"price":13,"realPrice":13,"title":"广博(GuangBo)16K115页线圈记事本子日记本文具笔记本图案随机","image":"/images/portal/01GuangBo16K115FB60506/"},{"cid":8,"uid":35,"pid":10000001,"num":13,"price":23,"realPrice":23,"title":"广博(GuangBo)10本装40张A5牛皮纸记事本子日记本办公软抄本GBR0731","image":"/images/portal/00GuangBo1040A5GBR0731/"}]}
+```
+测试成功。
 
+# 85. 确认订单页面-前端页面
+## 需求分析：
+- 订单页面中显示收货地址的`<option>`组件:
+    ```
+    八戒   家   北京市房山区高老庄3排6号   1380***1234
+    ```
+- 订单页面中显示购物车中选中的商品信息：
+
+- 在`orderConfirm.html`中，向`http://localhost:8080/carts/selected`
+发出请求，并给出若干个`cids`的值，获取到对应的购物车数据，显示在页面中即可！
+
+
+## 具体实现：
+### 1. 实现显示收货地址的功能:
+在Sr
 
 
 
