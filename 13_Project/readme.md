@@ -1009,9 +1009,63 @@ function showAddressList() {
 
 ### 在确认订单页面中显示购物车中选中的商品信息
 ```javascript
-
-
+function showCartList() {
+            $("#cart-list").empty();
+            $.ajax({
+                "url":"/carts/selected",
+                "data":"cids=8&cids=9",
+                "type":"get",
+                "dataType":"json",
+                "success":function(json) {
+                    
+                    console.log("成功返回List:"+json);
+                    if (json.state == 2000) {
+                        console.log("state == 2000");
+                        var totalNum = 0;
+                        var totalPrice = 0;
+                        for (let i = 0; i < json.data.length; i++) {
+                            console.log(json.data[i].cid);
+                            let html = '<tr>'
+                                + '<td><img src="#{image}collect.png" class="img-responsive" /></td>'
+                                + '<td>#{title}</td>'
+                                + '<td>¥<span>#{realPrice}</span></td>'
+                                + '<td>#{num}</td>'
+                                + '<td>¥<span>#{totalPrice}</span></td>'
+                                + '</tr>';
+                                
+                            html = html.replace(/#{image}/g, json.data[i].image);
+                            html = html.replace(/#{title}/g, json.data[i].title);
+                            html = html.replace(/#{realPrice}/g, json.data[i].realPrice);
+                            html = html.replace(/#{num}/g, json.data[i].num);
+                            html = html.replace(/#{totalPrice}/g, json.data[i].realPrice * json.data[i].num);
+                            
+                            $("#cart-list").append(html);
+                            totalNum += json.data[i].num;
+                            totalPrice += json.data[i].realPrice * json.data[i].num;
+                        }
+                        $("#totalNum").html(totalNum);
+                        $("#totalPrice").html(totalPrice);
+                        
+                    } else {
+                        alert(json.message);
+                        
+                    }
+         
+                }
+            });
+        }
 ```
+
+# 购物车页面传给确认订单页面购物车数据
+## 购物车页面：
+- 给复选框添加`name="cids"`和`value=#{cid}`属性.
+- 用__Form表单__提交勾选的`cid`，`action`属性设置为`orderConfirm.html`，`method`为`GET`.
+- 结算按钮的类型改成`submit`.
+这样一来，点击__结算__按钮，就会发出`orderConfirm.html?cids=8&cids=9`的GET请求.
+跳转到`orderConfirm.html`页面。
+
+## 确认订单页面：
+从url中获取参数：`"data":location.search.substr(1)`;
 
 
 
