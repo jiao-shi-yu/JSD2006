@@ -1068,9 +1068,141 @@ function showCartList() {
 从url中获取参数：`"data":location.search.substr(1)`;
 
 
+# jQuery中设置值和取值的函数
+- `val()`：设置/获取值
+- `html()`：设置/获取标签的子级HTML代码
+- `append()`：向某个标签的子级追加HTML代码
+- `empty()`：将某个标签的自己内容全部删除
+- `attr()`: 获取/设置某个标签的某个属性的值,例如<img>标签的`src`属性；
+- `prop()`: 获取/设置某个标签对象的JS属性的值；`readonly="readonly", check="checke"`
+
+# 83. 创建订单数据表
+1. 订单表
+```mysql
+CREATE TABLE t_order 
+(
+    oid INT NOT NULL AUTO_INCREMENT COMMENT "订单id",
+    uid INT COMMENT "用户id",
+    recv_name VARCHAR(20) COMMENT "收货人姓名",
+    recv_province VARCHAR(15) COMMENT  "收货省",
+    recv_city VARCHAR(15) COMMENT "收货市",
+    recv_area VARCHAR(15) COMMENT "收货区县",
+    recv_address VARCHAR(50) COMMENT "详细地址",
+    payment_amount BIGINT(20) COMMENT "支付金额",
+    status INT(1) COMMENT "订单状态:0-未支付，1-已支付，2-已取消，3-已关闭",
+    order_time DATETIME COMMENT "下单时间",
+    pay_time DATETIME COMMENT "支付时间",
+    created_user VARCHAR(20) COMMENT "创建用户",
+    created_time DATETIME COMMENT "创建时间",
+    modified_user VARCHAR(20) COMMENT "修改用户",
+    modified_time DATETIME COMMENT "修改时间",
+    PRIMARY KEY(oid)
+) DEFAULT CHARSET = utf8mb4;
+```
+2. 订单商品表
+```mysql
+CREATE TABLE t_order_item 
+(
+    id INT AUTO_INCREEMNT COMMENT "订单商品id",
+    oid INT COMMENT  "订单id",
+    pid INT COMMENT "商品id",
+    title VARCHAR(100) COMMENT "商品标题",
+    image VARCHAR(500) COMMENT "商品图片",
+    price BIGINT(20) COMMENT "商品单价",
+    num INT COMMENT "购买数量",
+    total_price BIGINT(20) COMMENT "商品总价",
+    created_user VARCHAR(20) COMMENT "创建用户",
+    created_time DATETIME COMMENT "创建时间",
+    modified_user VARCHAR(20) COMMENT "修改用户",
+    modified_time DATETIME COMMENT "修改时间",
+    PRIMARY KEY(id)
+) DEFAULT CHARSET = utf8mb4;
+```
+
+# 84. 创建订单实体类
+1. 订单类`cn.tedu.store.entity.Order`:
+```java
+
+```
+2. 订单商品类`cn.tedu.store.entity.OrderItem`:
+```java
+
+```
 
 
+# 85. 订单持久层
+创建一个处理订单数据的持久层接口，添加抽象方法：
+```java
+public interface OrderMapper {
+    Integer insertOrder(Order order);
+    Integer insertOrderItem(OrderItem orderItem);
+}
+```
+复制得到__OrderMapper.xml__文件，用于配置抽象方法的映射：
+```xml
+<mapper namespace="cn.tedu.store.mapper.OrderMapper">
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="oid">
 
+    </insert>
+    <insert id="insertOrderItem" useGeneratedKeys="true" keyProperty="id">
+
+    </insert>
+</mapper>
+```
+创建__OrderMapperTests__，测试订单持久层代码。
+
+
+# 86. 创建订单业务层
+
+## 业务接口与业务抽象方法
+创建`OrderService`接口，添加抽象方法:
+```java
+Order create(??)
+```
+## 创建订单的业务实现
+创建`OrderServiceImpl`类，实现`OrderService`接口。
+添加`@Service`注解，然后添加一个`@Autowired private ProductMapper productMapper`的属性.还有添加一个`@Autowired private AddressSerive addressService`配合处理收货地址数据。还要用到`@Autowired private CartService`计算商品总价什么的。
+```java
+@Service
+public class OrderServiceImpl implements OrderService {
+    @Autowired
+    private ProductMapper productMapper;
+    @Autowired 
+    private AddressSerive addressService
+}
+```
+## `OrderServiceImpl`中实现抽象方法。
+```java
+public Order create(Integer aid, Integer[] cids, Integer uid, String username) {
+    // 创建一个时间对象，后面会用到
+    Date now = new Date();
+
+    // 基于参数aid,调用cartService的getByAid()方法查询收货地市详情
+
+    //  
+
+    // 创建Order对象
+    // 补全Order对象 uid -> 参数uid
+    // recv_ -> 通过addressService获取 
+    // pay_amount -> ??
+    // status -> 0
+    // order_time -> now;
+    // payTime -> null
+    // 不全
+
+}
+```
+`AddressService`中添加抽象方法`Address getByAid(Intger aid);`.
+`AddressServiceImpl`中实现该方法。
+```java
+public Address getByAid(Integer aid) {
+    // 基于参数aid 调用mapper的findByAid()查询收货地址数据
+    // 判断是否为null； 是：抛出AddressNotFoundException
+    // 将查询结果中的部分属性设置为null. 4个日志不需要给到OrderServiceImpl。
+    // 返回查询结果
+}
+```
+持久层的抽象方法，提取为一个私有方法。便于直接调用。
 
 
 
