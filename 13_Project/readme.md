@@ -1103,7 +1103,7 @@ CREATE TABLE t_order
 ```mysql
 CREATE TABLE t_order_item 
 (
-    id INT AUTO_INCREEMNT COMMENT "订单商品id",
+    id INT AUTO_INCREMENT COMMENT "订单商品id",
     oid INT COMMENT  "订单id",
     pid INT COMMENT "商品id",
     title VARCHAR(100) COMMENT "商品标题",
