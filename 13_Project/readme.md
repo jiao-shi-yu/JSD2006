@@ -1077,7 +1077,7 @@ function showCartList() {
 - `prop()`: 获取/设置某个标签对象的JS属性的值；`readonly="readonly", check="checke"`
 
 # 83. 创建订单数据表
-1. 订单表
+1. 订单表(忘了写recv_phone, 后面有机会再补充吧)
 ```mysql
 CREATE TABLE t_order 
 (
@@ -1141,11 +1141,31 @@ public interface OrderMapper {
 复制得到__OrderMapper.xml__文件，用于配置抽象方法的映射：
 ```xml
 <mapper namespace="cn.tedu.store.mapper.OrderMapper">
+    
+   
     <insert id="insertOrder" useGeneratedKeys="true" keyProperty="oid">
-
+        INSERT INTO t_order (
+            uid, recv_name, recv_province, recv_city,
+            recv_area, recv_address, payment_amount, status,
+            order_time, pay_time,
+            created_user, created_time, modified_user, modified_time
+        ) VALUES (
+            #{uid}, #{recvName}, #{recvProvince}, #{recvCity},
+            #{recvArea}, #{recvAddress}, #{paymentAmount}, #{status}, 
+            #{orderTime}, #{payTime},
+            #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime}
+        );
     </insert>
     <insert id="insertOrderItem" useGeneratedKeys="true" keyProperty="id">
-
+        INSERT INTO t_order_item (
+            oid, pid, title, image,
+            price,  num, total_price,
+            created_user, created_time, modified_user, modified_time
+        ) VALUES (
+            #{oid}, #{pid}, #{title}, #{image},
+            #{price},  #{num}, #{totalPrice},
+            #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime}
+        );
     </insert>
 </mapper>
 ```
@@ -1157,7 +1177,7 @@ public interface OrderMapper {
 ## 业务接口与业务抽象方法
 创建`OrderService`接口，添加抽象方法:
 ```java
-Order create(??)
+Order create(Integer aid, Integer[] cids, Integer uid, String username);
 ```
 ## 创建订单的业务实现
 创建`OrderServiceImpl`类，实现`OrderService`接口。
@@ -1168,46 +1188,141 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductMapper productMapper;
     @Autowired 
-    private AddressSerive addressService
+    private AddressService addressService;
+    @Autowired
+    private CartService cartService;
+
 }
 ```
 ## `OrderServiceImpl`中实现抽象方法。
 ```java
+@Transactional
 public Order create(Integer aid, Integer[] cids, Integer uid, String username) {
-    // 创建一个时间对象，后面会用到
+     // 创建一个时间对象，后面会用到
     Date now = new Date();
 
-    // 基于参数aid,调用cartService的getByAid()方法查询收货地市详情
-
-    //  
-
+    // 基于参数aid,调用AddressService的getByAid()方法查询收货地市详情
+    Address address = addressService.getByAid(aid, uid);
+    
+    // 基于参数uid和cids调用CartService的getVOByCids()方法  查询购物车数据列表
+    List<CartVO> cartVOs = cartService.getVOByCids(uid, cids);
+    
+    
+    
     // 创建Order对象
+    Order order = new Order();
     // 补全Order对象 uid -> 参数uid
+    order.setUid(uid);
     // recv_ -> 通过addressService获取 
+    order.setRecvName(address.getName());
+    
+    order.setRecvProvince(address.getProvinceName());
+    order.setRecvCity(address.getCityName());
+    order.setRecvArea(address.getAreaName());
+    order.setRecvAddress(address.getAddress());
+    
     // pay_amount -> ??
+    // 声明变量Long paymentAmount表示订单总金额
+    Long paymentAmount = 0l;
+    for (CartVO cartVO : cartVOs) {
+        paymentAmount += cartVO.getRealPrice()  * cartVO.getNum();
+    }
+    order.setPaymentAmount(paymentAmount);
     // status -> 0
+    order.setStatus(0);
     // order_time -> now;
+    order.setOrderTime(now);
     // payTime -> null
-    // 不全
+    order.setPayTime(null);
+    // 补全四个日志数据
+    order.setCreatedTime(now);
+    order.setCreatedUser(username);
+    order.setModifiedTime(now);
+    order.setModifiedUser(username);
+    
+    insertOrder(order);
+    // 便利购物车数据, 生成订单商品
+    for (CartVO cartVO : cartVOs) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOid(order.getOid());
+        orderItem.setPid(cartVO.getPid());
+        orderItem.setTitle(cartVO.getTitle());
+        orderItem.setImage(cartVO.getImage());
+        orderItem.setNum(cartVO.getNum());
+        orderItem.setTotalPrice(cartVO.getNum()*cartVO.getPrice());
+        orderItem.setCreatedTime(now);
+        orderItem.setCreatedUser(username);
+        orderItem.setModifiedTime(now);
+        orderItem.setModifiedUser(username);
+        insertOrderItem(orderItem);
+    }
+    return order;
+}
 
+private void insertOrder(Order order) {
+    Integer rows = orderMapper.insertOrder(order);
+    if (rows != 1) {
+        throw new InsertException("插入订单数据是出现未知错误");
+    }
+}
+
+private void insertOrderItem(OrderItem item) {
+    Integer rows = orderMapper.insertOrderItem(item);
+    if (rows != 1) {
+        throw new InsertException("插入订单商品数据是出现错误");
+    }
 }
 ```
-`AddressService`中添加抽象方法`Address getByAid(Intger aid);`.
+`AddressService`中添加抽象方法：
+```java
+Address getByAid(Intger aid, Integer uid);
+```
 `AddressServiceImpl`中实现该方法。
 ```java
-public Address getByAid(Integer aid) {
-    // 基于参数aid 调用mapper的findByAid()查询收货地址数据
-    // 判断是否为null； 是：抛出AddressNotFoundException
-    // 将查询结果中的部分属性设置为null. 4个日志不需要给到OrderServiceImpl。
-    // 返回查询结果
-}
+public Address getByAid(Integer aid, uid) {
+        // 基于参数aid 调用mapper的findByAid()查询收货地址数据
+        Address address = findByAid(aid);
+        // 判断是否为null； 是：抛出AddressNotFoundException
+        if (address == null) {
+            throw new AddressNotFoundException("获取收货地址失败");
+        }
+        // 判断是否为当前用户的地址。
+        if (!address.getUid().equals(uid)) {
+            throw new AccessDeniedException("非当前用户的地址数据");
+        }
+        // 将查询结果中的部分属性设置为null. 4个日志不需要给到OrderServiceImpl。
+        address.setProvinceCode(null);
+        address.setCityCode(null);
+        address.setAreaCode(null);
+        address.setIsDefault(null);
+        address.setCreatedUser(null);
+        address.setCreatedTime(null);
+        address.setModifiedUser(null);
+        address.setModifiedTime(null);
+        // 返回查询结果
+        return address;
+    }
 ```
 持久层的抽象方法，提取为一个私有方法。便于直接调用。
 
-
-
-
-
+# 87.创建订单--控制器层
+1. 处理异常:无
+2. 设计请求
+- 请求路径：`/orders/create`
+- 请求参数：`Integer aid, Integer cids`
+- 使用Session: 是
+- 请求类型： `POST`
+- 响应结果：`JsonResult<Order>`
+3. 处理请求
+创建`OrderContoller`，继承自`BaseController`，在类之前添加`@RestController`和
+`@RequestMapping("order")`注解，在类中添加`@Autowired private CartService cartService`对象。
+```java
+@RestController
+@RequestMapping("order")
+public class OrderController extends BaseController {
+    
+}
+```
 
 
 
