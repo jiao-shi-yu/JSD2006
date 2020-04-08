@@ -6,3 +6,8 @@
 
 学习一下 Eclipse 的使用：
 Validate
+
+
+
+设置模板代码
+Preference -> Web -> JSP Files -> Editor -> Templates
