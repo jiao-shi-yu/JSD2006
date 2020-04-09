@@ -36,7 +36,7 @@
 
 #### page 
 page对象代表JSP本身，只有在JSP页面内才是合法的。
-page对象本质上是包含当前Servlet接口引用的对象，可以看做是this关键字。
+page对象本质上是当前页面对应的Servlet的对象，可以看做是this关键字。
 - 指令
     + 什么是指令：通知容器在生成Servlet源代码时，做一些额外的处理，比如导包。
     + 语法： `<% 指令名 属性=值 %>`
@@ -46,7 +46,9 @@ page对象本质上是包含当前Servlet接口引用的对象，可以看做是
         - 例：
             - `<%@ page import="java.util.*" %>`
             - `<%@ page import="java.util.*, java.net.*" %>`
-    
+    + include指令：
+        告诉容器在把JSP转换成Servlet时，将file属性指定的文件的内容插入到该指令所在的位置。
+
 ## 3. JSP是如何执行的？
 1. 容器将JSP转换成一个对应的Servlet HttpJspBase extends HttpServlet
     a. html -> 在service方法中：`out.write`
