@@ -16,7 +16,7 @@ stus[0].age = 22;
 ```
 
 ```java
-Student[] students = new Student[] {
+Student[] students = /*new Student[]*/ {
     new Student("zs", 16, "LF"),
     new Student("ls", 28, "JMS"),
     new Student("ww" ,27, "SD")
