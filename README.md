@@ -15,3 +15,13 @@
 
 
 # 核心知识点
+
+
+
+# 其他技术栈
+
+1. markdown语法
+2. git & github
+3. html + css + js
+4. jquery
+5. ajax
