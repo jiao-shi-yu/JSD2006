@@ -34,3 +34,80 @@ public 公共的，任何类都可访问
 默认不写，包内可见。
 protected 包内和其它包中的子类可见。
 private 同一个类中可见
+
+
+
+# final 关键字
+
+final 最终的，不可变的。 final 可以修饰变量、定义常量、修饰方法和类。
+
+## final 修饰变量
+- final 修饰基本类型的变量。表示变量的值不可变。
+```java
+final int num = 1;
+num = 2; // 报错
+```
+- final 修饰引用类型的变量，表示引用的地址不可变。但是对象的属性，只要未被 final 修饰，还是可以变的。
+```java
+class Person {
+    String name;
+}
+
+public class Test {
+    public static void main(String[] args) {
+        final Person person = new Person("小明");
+        System.out.println(person);
+//      person = new Person("小红"); // 引用无法更改
+        person.name = "小红"; // 对象的属性是可以更改的
+        System.out.println(person);
+    }
+}
+```
+
+## final 定义常量
+
+Java 中没有原生的常量，也没有一个关键字来定义常量。  
+我们可以通过使用 static final 来修饰变量，达到常量的效果，间接地实现常量。
+```java
+public static final CONST_ONE = 1;
+public static final CONST_TWO = 2;
+```
+> 常量名一般全部大写，中间用下划线分隔。
+
+
+## final 修饰的变量必须被初始化
+
+否则编译不通过，这样一来，就避免了空指针异常。
+
+
+## final 修饰类和方法
+
+被 final 修饰的类，不允许被继承。
+被 final 修饰的方法，不允许被重写。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
