@@ -51,6 +51,9 @@ num = 2; // 报错
 ```java
 class Person {
     String name;
+    Person(String name) {
+        this.name = name;
+    }
 }
 
 public class Test {
@@ -63,28 +66,50 @@ public class Test {
     }
 }
 ```
-
+控制台输出：
+```
+day05.Person@7852e922
+day05.Person@7852e922
+```
 ## final 定义常量
 
 Java 中没有原生的常量，也没有一个关键字来定义常量。  
 我们可以通过使用 static final 来修饰变量，达到常量的效果，间接地实现常量。
 ```java
-public static final CONST_ONE = 1;
-public static final CONST_TWO = 2;
+public static final Double PI = 3.1415926535;
 ```
 > 常量名一般全部大写，中间用下划线分隔。
+> 这个常量不能写在 main() 方法中。
 
-
-## final 修饰的变量必须被初始化
+## final 修饰的变量，使用前必须被初始化
 
 否则编译不通过，这样一来，就避免了空指针异常。
-
-
+```java
+    final Person finalPerson;
+//  System.out.println(finalPerson.name); // may not have been initialized
+    finalPerson = new Person("罗志祥");
+    System.out.println(finalPerson.name); 
+```
 ## final 修饰类和方法
 
-被 final 修饰的类，不允许被继承。
-被 final 修饰的方法，不允许被重写。
-
+- 被 final 修饰的类，不允许被继承。
+```java
+final class FinalClass {
+    
+}
+// class AClass extends FinalClass {} 
+```
+- 被 final 修饰的方法，不允许被重写。
+```java
+class NotFinalClass {
+    final void sayHello() {
+        System.out.println("你好");
+    }
+}
+class SubClass extends NotFinalClass {
+//  void sayHello() {} // 无法重写 final 方法。
+}
+```
 
 
 
