@@ -68,5 +68,57 @@ public class DocDemo {
 # 字符串
 
 ## 字符串是不可变对象
+```java
 
-- `java.lang.String`源码`private final char[] 
+public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence {
+    /** The value is used for character storage. */
+    private final char value[];
+
+```
+- 字符串类型被final修饰，不可以被继承
+- 字符串内部封装了一个不可变的字符数组
+- 字符串中的char存储的是二进制Unicode编码，长度是16位，即为两个字节。
+
+ACSII / GBK 
+
+GBK:一个汉字劈成左右两半。
+
+
+## String常量池
+- Java 为了提高性能，静态字符串（字面量、常量、常量拼接的结果）都在常量池中创建，并尽量使用同一个对象，重用静态字符串。
+- 对于一个字符串字面量，JVM会首先在常量池中查找，如果存在就从常量池中返回对象。不存在才会创建一个新的字符串对象。
+
+## 内存编码及长度
+- String在内存中采用Unicode编码，每个字符占两个字节。
+
+
+
+## 使用`indexOf()`实现检索
+- indexOf方法：在字符串中检索另一个字符串。、
+- String提供了几个重载的`indexOf`方法。
+|方法|作用|
+|:-|:-|
+|int indexOf(String str)|在字符串中检索str, 返回第一次出现的位置，如果找不到则返回-1|
+|int indexOf(String str, int fromIndex)|从指定位置开始检索str|
+- String还`lastIndexOf()`方法，是从后往前检索字符串的
+|方法|作用|
+|:-|:-|
+|int lastIndexOf(String str)|str在字符串中多次出现时，返回最后一次出现的位置|
+
+示例代码：
+
+
+## 使用`substring()`获取子字符串
+
+- `subString()`方法用于返回一个字符串的子字符串。
+- 如下：
+|:-|:-|
+|`String substring(int beginIndex, int endIndex)`|返回字符串从beginIndex到endIndex的子字符串。含前不含后|
+|`String substring(int beginIndex)`|从指定的开始位置一直截取到最后|
+
+示例代码:
+
+## `trim()`去掉一个字符串的前导和后继空字符
+
+示例代码
