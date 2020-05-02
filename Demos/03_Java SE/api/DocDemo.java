@@ -1,18 +1,22 @@
 package api;
 /**
- * ÎÄµµ×¢ÊÍÊÇ¹¦ÄÜ¼¶×¢ÊÍ£¬ÓÃÀ´ËµÃ÷Àà¡¢·½·¨¡¢³£Á¿µÄ×÷ÓÃ
- * @author jiao_ ------------×÷Õß
- * @version 1.2 -------------°æ±¾
- * @see java.lang.String  ---²Î¿¼
- * @since JDK 1.7 -----------´ÓJDK1.7¼ÓÈëÁËÕâ¸ö¹¦ÄÜ
+ * æ–‡æ¡£æ³¨é‡Šæ˜¯åŠŸèƒ½çº§æ³¨é‡Šï¼Œç”¨æ¥è¯´æ˜ç±»ã€æ–¹æ³•ã€å¸¸é‡çš„ä½œç”¨
+ * @author jiao_ ------------ä½œè€…
+ * @version 1.2 -------------ç‰ˆæœ¬
+ * @see java.lang.String  ---å‚è€ƒ
+ * @since JDK 1.7 -----------ä»JDK1.7åŠ å…¥äº†è¿™ä¸ªåŠŸèƒ½
  */
 public class DocDemo {
 	/**
-	 * ÎªÌØ¶¨µÄÓÃ»§Ìí¼ÓÎÊºòÓï
-	 * @param name ¸ø¶¨µÄÓÃ»§Ãû
-	 * @return ´øÓĞÎÊºòÓïµÄ×Ö·û´®
+	 * sayHello() ä¸­çš„é—®å€™è¯­
+	 */
+	public static final String INFO = "æ‚¨å¥½";
+	/**
+	 * ä¸ºç‰¹å®šçš„ç”¨æˆ·æ·»åŠ é—®å€™è¯­
+	 * @param name ç»™å®šçš„ç”¨æˆ·å
+	 * @return å¸¦æœ‰é—®å€™è¯­çš„å­—ç¬¦ä¸²
 	 */
 	public String sayHello(String name) {
-		return "ÄúºÃ!" + name;
+		return INFO + name;
 	}
 }
