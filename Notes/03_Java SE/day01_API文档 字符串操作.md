@@ -92,6 +92,7 @@ GBK:一个汉字劈成左右两半。
 
 - `subString()`方法用于返回一个字符串的子字符串。
 - 如下：
+|方法|作用|
 |:-|:-|
 |`String substring(int beginIndex, int endIndex)`|返回字符串从beginIndex到endIndex的子字符串。含前不含后|
 |`String substring(int beginIndex)`|从指定的开始位置一直截取到最后|
