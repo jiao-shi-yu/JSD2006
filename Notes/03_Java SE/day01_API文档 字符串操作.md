@@ -66,7 +66,28 @@ GBK:一个汉字劈成左右两半。
 
 ## String常量池
 - Java 为了提高性能，静态字符串（字面量、常量、常量拼接的结果）都在常量池中创建，并尽量使用同一个对象，重用静态字符串。
-- 对于一个字符串字面量，JVM会首先在常量池中查找，如果存在就从常量池中返回对象。不存在才会创建一个新的字符串对象。
+- 使用字符串字面量，创建字符串对象时，JVM会首先在常量池中查找，如果存在就从常量池中返回对象。不存在才会创建一个新的字符串对象。
+字符串常量池-示例代码：
+```java
+public class StringDemo {
+    public static void main(String[] args) {
+        String s1 = "123abc";
+        String s2 = "123abc";
+        System.out.println(s1 == s2); // true
+        
+        String s3 = "123abc";
+        System.out.println(s1 == s3); // true
+        
+        s1 = s1 + "!";                // 123abc!
+        System.out.println(s1);       // 123abc
+        System.out.println(s2);       // 123abc!
+        
+        System.out.println(s1 == s2); // false
+        System.out.println(s3 == s2); // true
+    }
+}
+```
+![自己画了个图](pictures/字符串常量池@2x.png)
 
 ## 内存编码及长度
 - String在内存中采用Unicode编码，每个字符占两个字节。
