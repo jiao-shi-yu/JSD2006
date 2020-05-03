@@ -113,6 +113,7 @@ public class StringDemo {
 
 - `subString()`方法用于返回一个字符串的子字符串。
 - 如下：
+
 |方法|作用|
 |:-|:-|
 |`String substring(int beginIndex, int endIndex)`|返回字符串从beginIndex到endIndex的子字符串。含前不含后|
