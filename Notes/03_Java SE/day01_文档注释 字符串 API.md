@@ -124,3 +124,14 @@ public class StringDemo {
 ## `trim()`去掉一个字符串的前导和后继空字符
 
 示例代码
+
+
+
+
+
+
+
+# String Builder 
+
+# String Buffer
+
