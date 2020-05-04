@@ -8,9 +8,8 @@ package string.stringBuilder;
 public class StringDemo2 {
 	public static void main(String[] args) {
 		String str = "a";
-		for (int i = 0; i < 100; i++) {
-			str = str + str;
-			System.out.println(str);
+		for (int i = 0; i < 999999; i++) {
+			str = str + i;
 		}
 		System.out.println("执行完毕");
 	}
