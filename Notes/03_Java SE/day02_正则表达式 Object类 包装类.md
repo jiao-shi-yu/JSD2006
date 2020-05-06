@@ -110,6 +110,7 @@ toString()方法是 Object 类中的重要方法，用于返回对象值的字�
 
 
 # 包装类
+包装类是为了解决基本类型不能直接参与面向对象开发的问题而出现的。
 
 - 在进行类型转换的范畴内，有一种搞特殊的转换，需要将 int 这样的基本数据类型转换为对象；
 - 所有基本类型都有一个与之对应的类，即包装类(Wrapper)
@@ -141,6 +142,17 @@ toString()方法是 Object 类中的重要方法，用于返回对象值的字�
 static 包装类对应的基本类型 MAX_VALUE;
 static 包装类对应的基本类型 MIN_VALUE;
 ```
+
+## equals 比较的是 xxxValue()
+```java
+public boolean equals(Object obj) {
+    if (obj instanceof Integer) {
+        return value == ((Integer)obj).intValue();
+    }
+    return false;
+}
+```
+
 
 ## 自动装箱和拆箱
 
