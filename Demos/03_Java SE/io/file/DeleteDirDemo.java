@@ -1,4 +1,4 @@
-package file;
+package io.file;
 
 import java.io.File;
 

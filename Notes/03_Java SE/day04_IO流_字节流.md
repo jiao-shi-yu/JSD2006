@@ -7,10 +7,16 @@
 - 输入：从外界读取数据
 - 输出：向外界写出数据
 
+
+# 流
+文件与流的区别
+
+
+
 # 输入流与输出流
 
-- 输入流：数据从文件到内存的过程
-- 输出流：数据从内存到文件的过程
+- 输入流：数据从文件到内存的过程，超类是 InputStream。
+- 输出流：数据从内存到文件的过程，超类是 OutputStream。
 
 # 字节流的字符流
 
@@ -30,7 +36,7 @@
 通常节点流，也称为低级流。
 处理流也称为高级流或过滤流。
 
-
+## 字节流与字符流
 
 # InputStream 和 OutputStream （字节流）
 
@@ -93,7 +99,14 @@ FileInputStream 继承自 InputStream，提供了`read()`方法，以字节为�
 
 
 # 缓冲流 
-
+缓冲流的继承结构：
+```
+java.lang.Object
+    java.io.InputStream
+        java.io.FilterInputStream
+            java.io.BufferedInputStream
+```
+过滤流、缓冲流。
 ## BufferedOutputStream 缓冲输出流
 
 在向应将设备做写出操作时，增加写出次数无疑会降低写出效率。
