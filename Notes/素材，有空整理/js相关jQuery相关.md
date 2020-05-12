@@ -1,1 +1,0 @@
-1.比如`$("#form").serialize()`.
