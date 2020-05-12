@@ -1,5 +1,4 @@
-# Java 异常类型结构 ———— Throwable, Error 和 Exception
-
+##  `Throwable`, `Error` 和 `Exception`
 - Throwable 可抛出的，是 Java 异常体系中的最高父类，有两个派生类 Erorr 和 Exception.
 - Error 系统级别的错误，虚拟机相关，比如系统崩溃，内存泄漏等。编译器不会对这类错误进行检测，程序中也不应该捕获错误。出现了我们拿他也没办法，程序会被终止运行。
 - Exception 程序级别的异常，可以在程序中进行捕获，处理完后，程序还是能跑的。
@@ -314,10 +313,14 @@ public class ThrowDemo {
     }
 }
 ```
+控制台输出：
+```java
+exception.IllegalAgeException: 年龄不合法
+0
+    at exception.Person.setAge(Person.java:12)
+    at exception.ThrowDemo.main(ThrowDemo.java:8)
 
-
-
-
+```
 
 
 
