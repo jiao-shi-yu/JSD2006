@@ -85,7 +85,60 @@ BufferedReader 提供了一个可以便于读取一行字符的方法：
 
 
 
+# 简易记事本
 
+* 程序启动后要求用户在控制台先输入文件名，然后对该文件写操作。
+* 之后用户在控制台输入的每一行字符串都按行写入到该文件。
+* 输出 q ，退出程序。
+
+```java
+package io.readerWriter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * 简易记事本工具
+ * 程序启动后要求用户在控制台先输入文件名，然后对该文件写操作。
+ * 之后用户在控制台输入的每一行字符串都按行写入到该文件。
+ * @author yuyu
+ *
+ */
+public class Note {
+    public static void main(String[] args) throws IOException {
+        System.out.print("请输入文件名：\n> ");
+        Scanner scanner = new Scanner(System.in);
+        String fileName = scanner.nextLine();
+        
+        PrintWriter pw = new PrintWriter(fileName);
+        int i = 1;
+        System.out.print("第" + i + "行> ");
+        String line = null;
+        while(!(line = scanner.nextLine()).equals("q")) {
+            pw.println(line);
+            i ++;
+            System.out.print("第" + i + "行> ");
+        };
+        scanner.close();
+        pw.close();
+        System.out.println("保存成功！");
+    }
+}
+```
+```
+请输入文件名：
+> 小明的日记.text
+第1行> 我喜欢小红，
+第2行> 嘻嘻
+第3行> 哈哈哈
+第4行> 哈哈哈哈
+第5行> 啦啦啦啦啦
+第6行> 醒醒
+第7行> q
+保存成功！
+
+```
 
 
 
