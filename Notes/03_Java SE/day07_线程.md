@@ -305,6 +305,352 @@ public class SleepDemo {
 }
 ```
 一个线程正在 sleep 的过程中，调用 interrupet 方法会导致抛出中断异常。
+```java
+package thread;
+
+public class SleepDemo2 {
+    public static void main(String[] args) {
+        Thread lin = new Thread() {
+            public void run() {
+                System.out.println("林：刚美完容，睡一会儿吧...");
+                try {
+                    Thread.sleep(10 * 1000);
+                } catch (InterruptedException e) {
+                    System.err.println("林：干嘛呢！干嘛呢！都破了相了！");
+                }
+                System.out.println("林：醒了。");
+            }
+        };
+        Thread huang = new Thread() {
+            public void run() {
+                System.out.println("黄：开始砸墙：");
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        Thread.sleep(1 * 1000);
+                        System.out.println("80~");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("咣当！");
+                System.out.println("搞定！");
+                lin.interrupt();
+            }
+        };
+        lin.start();
+        huang.start();
+        
+    }
+}
+```
+Output:
+```
+林：刚美完容，睡一会儿吧...
+黄：开始砸墙：
+80~
+80~
+80~
+80~
+80~
+咣当！
+搞定！
+林：干嘛呢！干嘛呢！都破了相了！
+林：醒了。
+```
+
+## final setDaemon(boolean on)
+用户线程：我们平常创建的普通线程。
+守护线程：用来服务于用户线程。可以通过 setDaemon() 来设置。
+**当线程只剩下守护线程的时候，JVM 就会退出**。
+观察下面代码和输出：
+```java
+package thread;
+
+public class SetDaemonDemo {
+    public static void main(String[] args) {
+        Thread rose = new Thread() {
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    System.out.println("Rose:let me go!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("Rose: Ahhhhh~");
+                System.out.println("噗通！");
+            }
+        };
+        
+        Thread jack = new Thread() {
+            public void run() {
+                while(true) {
+                    try {                       
+                        System.out.println("Jack: You jump! I jump!");
+                        Thread.sleep(1*1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        
+        rose.start();
+        jack.start();
+    }
+}
+```
+```
+Rose:let me go!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose: Ahhhhh~
+噗通！
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+```
+可以看到 jack 线程的死循环会一直执行下去。像是个渣男，哈哈哈哈。
+
+当把 jack 线程设置为守护线程时，则会看到不一样的结果。
+```java
+package thread;
+
+public class SetDaemonDemo {
+    public static void main(String[] args) {
+        Thread rose = new Thread() {
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    System.out.println("Rose:let me go!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("Rose: Ahhhhh~");
+                System.out.println("噗通！");
+            }
+        };
+        
+        Thread jack = new Thread() {
+            public void run() {
+                while(true) {
+                    try {                       
+                        System.out.println("Jack: You jump! I jump!");
+                        Thread.sleep(1*1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        
+        rose.start();
+        jack.setDaemon(true);
+        jack.start();
+    }
+}
+```
+控制台输出：
+```
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Jack: You jump! I jump!
+Rose:let me go!
+Jack: You jump! I jump!
+Rose: Ahhhhh~
+噗通！
+```
+可以看到 rose 线程结束。 守护线程也结束了。
+
+> 注意要在线程启动之前，将其设置为守护线程。
+
+
+## join()
+
+调用 join() 方法的线程在执行完 run()方法之前会一直阻塞在 join 方法处。run() 执行完成后，才会执行后面的代码。这就实现了线程同步。
+
+多个线程执行存在先后顺序，称为同步运行。
+多个线程执行，没有先后顺序，称为异步运行。
+
+
+下面的示例，模拟下载一张图片
+```java
+package thread;
+
+public class JoinDemo {
+    public static boolean isFinish = false;
+    public static void main(String[] args) {
+        
+        Thread download = new Thread() {
+            public void run() {
+                System.out.println("download：开始下载图片");
+                for (int i = 0; i <= 100; i++) {
+                    System.out.println("download: 已下载" + i + "%...");
+                    try {                       
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("下载完成！");
+                isFinish = true;
+            }
+        };
+        
+        download.start();
+        
+    }
+}
+```
+控制台输出：
+```
+download：开始下载图片
+download: 已下载0%...
+download: 已下载1%...
+(中间省略)
+download: 已下载93%...
+download: 已下载94%...
+download: 已下载95%...
+download: 已下载96%...
+download: 已下载97%...
+download: 已下载98%...
+download: 已下载99%...
+download: 已下载100%...
+下载完成！
+```
+下面这个进程模拟显示图片和文字。
+```java
+
+        
+        Thread show = new Thread() {
+            public void run() {
+                try {
+                    System.out.println("开始显示文字");
+                    Thread.sleep(5000);
+                    System.out.println("完成显示文字");
+                    
+                    System.out.println("开始显示图片");
+                    if (!isFinish) {
+                        throw new RuntimeException("图片加载失败");
+                    }           
+                    System.out.println("完成显示图片");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+            }
+        };
+        show.start();
+
+```
+控制台输出：
+```
+开始显示文字
+download：开始下载图片
+download: 已下载0%...
+download: 已下载1%...
+download: 已下载92%...
+download: 已下载93%...
+download: 已下载94%...
+完成显示文字
+开始显示图片
+java.lang.RuntimeException: 图片加载失败
+    at thread.JoinDemo$2.run(JoinDemo.java:41)
+download: 已下载95%...
+download: 已下载96%...
+download: 已下载97%...
+download: 已下载98%...
+download: 已下载99%...
+download: 已下载100%...
+下载完成！
+
+```
+调用 join() 的线程执行完成后，后面的代码才会执行。
+```java
+        Thread show = new Thread() {
+            public void run() {
+                try {
+                    System.out.println("开始显示文字");
+                    Thread.sleep(5000);
+                    System.out.println("完成显示文字");
+                    
+                    download.join(); // <-----
+                    
+                    System.out.println("开始显示图片");
+                    if (!isFinish) {
+                        throw new RuntimeException("图片加载失败");
+                    }           
+                    System.out.println("完成显示图片");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+            }
+        };
+        show.start();
+```
+控制台输出：
+```
+download: 已下载93%...
+download: 已下载94%...
+完成显示文字
+download: 已下载95%...
+download: 已下载96%...
+download: 已下载97%...
+download: 已下载98%...
+download: 已下载99%...
+download: 已下载100%...
+下载完成！
+开始显示图片
+完成显示图片
+```
+可以看到 download线程执行完成之后，才开始执行后面的代码。
+
+> 语法上有一个小小的注意点。
+> 方法的局部内部类引用方法的其他局部变量，要求这个局部变量是 final 修饰的。
+> 这就是用一个属性`boolean isFinish`的原因。
+> JDK 8 之后，局部内部类引用方法的局部变量，如果只是用他的值，而不给他重新赋值的话。就不需要用 final 修饰。但是，上面这个示例中 isFinish 是要被更改为 true 的。因此并不适用。还是要用一个属性来写。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
