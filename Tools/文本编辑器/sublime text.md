@@ -10,3 +10,5 @@ Preferences -> Package Settings -> Markdown Editting ->  Markdow GFM Settings -
 
 
 
+# 边栏切换显示快捷键
+`cmd K, B` 
