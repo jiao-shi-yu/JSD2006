@@ -45,12 +45,12 @@ PrintWriter 是具有自动行刷新的字符输出流。其提供了比较丰�
 - PrintWriter(File file)
 - PrintWriter(String fileName)
 - PrintWriter(OutputStream out)
-- PrintWriter(OutputStream out, boolean autoFlush)
+- `PrintWriter(OutputStream out, boolean autoFlush)`
 - PrintWriter(Writer writer)
 - PrintWriter(Writer writer, boolean autoFlush)
 
 其中，
-参数为字节流 OutputStream 和 字符流 Writer 的构造方法有一个 boolean 参数，该参数表示 PrintWriter 是否为自动行刷新。
+参数为字节流 OutputStream 和 字符流 Writer 的构造方法有一个 boolean 参数，该参数表示 PrintWriter 是否为__自动行刷新__。
 
 
 ## print 与 println 方法
@@ -74,11 +74,13 @@ PrintWriter 提供了丰富的重载 print 与 println 方法。
 
 BufferedReader 是缓冲字符串输入流，其内部提供了缓冲区。可以提高读取效率。
 
-## 常用构造方法
+## BufferedReader(Reader reader);
 
-- BufferedReader(Reader reader);
 
-## 使用 BufferedReader 读取字符串
+
+## String readLine()
+
+使用 BufferedReader 读取字符串
 
 BufferedReader 提供了一个可以便于读取一行字符的方法：
 - String readLine()：该方法会连续读取一行字符串，直到读取到换行符为止。返回的字符串中不包含换行符。
