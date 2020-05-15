@@ -1,3 +1,5 @@
+# 运行代码
+`cmd + opt + X, J`: Run as Java Application
 
 # 代码补全
 sout + opt
