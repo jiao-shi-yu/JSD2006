@@ -8,11 +8,20 @@ package socket;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class Server {
 	private ServerSocket serverSocket;
+	
+	// 用来向多个客户端转发消息
+	private PrintWriter[] allOut;
+	
+	
+	
 	
 	/**
 	 * 服务端的构造方法，用来初始化服务端。
@@ -58,14 +67,26 @@ public class Server {
 		}
 		public void run() {
 			try {
-
+				
 				InputStream in = socket.getInputStream();
 				InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 				BufferedReader br = new BufferedReader(isr);
 				
+				// 获取输出流
+				OutputStream out = socket.getOutputStream();
+				PrintWriter pw = new PrintWriter(out);
+				
+				// 将 printWriter 添加到数组中
+				// 1. 扩容
+				allOut = Arrays.copyOf(allOut, allOut.length+1);
+				// 2. 赋值
+				allOut[allOut.length-1] = pw;
+				
 				String message = null;
 				while((message = br.readLine()) != null) {
-					System.out.println("客户端说：" + message);
+					for (PrintWriter writer: allOut) {
+						writer.println(message);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
