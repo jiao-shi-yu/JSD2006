@@ -632,26 +632,451 @@ download: 已下载100%...
 > 这就是用一个属性`boolean isFinish`的原因。
 > JDK 8 之后，局部内部类引用方法的局部变量，如果只是用他的值，而不给他重新赋值的话。就不需要用 final 修饰。但是，上面这个示例中 isFinish 是要被更改为 true 的。因此并不适用。还是要用一个属性来写。
 
+# 多线程
+同时干几件事情，各干各的，怕就怕抢一个资源。
+
+```java
+package thread;
+
+public class BeansDemo {
+    public static void main(String[] args) {
+        Table table = new Table();
+        Thread t1 = new Thread() {
+            public void run() {
+                while (true) {
+                    int bean = table.getBean();
+                    System.out.println(getName() + ":" + bean);
+                }
+            }
+        };
+        t1.start();
+        Thread t2 = new Thread() {
+            public void run() {
+                while (true) {
+                    int bean = table.getBean();
+                    System.out.println(getName() + ":" + bean);
+                }
+            }
+        };
+        t2.start();
+    }
+}
 
 
+class Table {
+    // 桌子上有20个豆子
+    private int beans = 20;
+    public int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+        Thread.yield(); // 模拟到这里没有时间了。
+        return beans --; 
+    }
+}
+```
+这段代码模拟两个线程抢豆子。
+有一定几率会出现：
+```
+Thread-0:-313389
+Thread-1:-313390
+Thread-0:-313391
+Thread-1:-313392
+Thread-0:-313393
+Thread-1:-313394
+Thread-1:-313395
+Thread-0:-313396
+Thread-1:-313397
+Thread-0:-313398
+Thread-1:-313399
+Thread-0:-313400
+Thread-1:-313401
+```
+#### 过程分析
+举个例子。
+当还剩一颗豆子的时候，比如线程 1 执行到
+```java
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+```
+然后`Thread.yield()`让给线程 2 执行。
+线程 2 刚好也是执行到
+```java
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+```
+让给线程 1，
+然后线程 1 运行
+```java
+return beans --;
+```
+线程 1 return 1, beans == 0;
+
+如果这个时候，线程 1 让给线程 2.
+线程 2 也会执行
+```java
+return beans --;
+```
+线程 2 return 的是 0， beans == -1;
+然后后面就精彩了。
+一直循环到 -21亿， 然后溢出到 正21亿，再次减到 0，才有可能结束。
 
 
+# 上个锁——————把抢这件事儿变成排队干
+## 同步方法
+上面那个例子中，只需要在访问临界资源的方法那里加一个`synchronized`关键字即可。
+
+```java
+    public synchronized int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+        Thread.yield(); // 模拟到这里没有时间了。
+        return beans --; 
+    }
+```
+控制台输出：
+```
+Thread-0:3
+Thread-1:2
+Thread-0:1
+Exception in thread "Thread-1" Exception in thread "Thread-0" java.lang.RuntimeException: 没有豆子了
+    at thread.Table.getBean(BeansDemo.java:33)
+    at thread.BeansDemo$2.run(BeansDemo.java:18)
+java.lang.RuntimeException: 没有豆子了
+    at thread.Table.getBean(BeansDemo.java:33)
+    at thread.BeansDemo$1.run(BeansDemo.java:9)
+```
+
+#### 过程分析
+举个例子。
+当还剩一颗豆子的时候，比如线程 1 执行到
+```java
+    public synchronized int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+        Thread.yield(); // 模拟到这里没有时间了。
+        return beans --; 
+    }
+```
+**线程 1 就会给这段代码上个锁**。
+
+执行到`Thread.yield()`，把 CPU 时间片让给线程 2 执行。
+
+线程 2 执行这段代码，
+```java
+    public synchronized int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+        Thread.yield(); // 模拟到这里没有时间了。
+        return beans --; 
+    }
+```
+发现已经被线程 1 上了锁，他进不去，只有在外面等着。这段 CPU 时间片段消耗完成后。运行时间有交给了线程 1.
+
+线程1，接着上次的任务运行。
+```java
+    public synchronized int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+        // yield() 主动让出 CPU 时间
+        Thread.yield(); // 模拟到这里没有时间了。
+        return beans --; 
+    }
+```
+`return beans --` 得到的结果是：
+return 1, beans == 0;
+
+线程 1，接着运行到:
+```java
+    public synchronized int getBean() {
+        if (beans == 0) {
+            throw new RuntimeException("没有豆子了");
+        }
+```
+就会抛出一个异常，说没有豆子了。
 
 
+被 sychronized 修饰的方法称为同步方法。多个线程不能同时访问。可以有效解决线程安全问题。
 
 
+## 同步块
+
+同步是一种高开销的操作，通常没有必要同步整个方法。使用 sychronized 代码块同步关键代码即可。
+语法：
+```java
+synchronized(同步监视器对象) {
+    需要同步运行的代码块
+}
+```
 
 
+### 使用同步方法：
+```java
+package thread;
+
+public class ShoppingDemo {
+    public static void main(String[] args) {
+        Shop shop = new Shop();
+        Thread t1 = new Thread() {
+            public void run() {
+                shop.buy();
+            }
+        };
+        Thread t2 = new Thread() {
+            public void run() {
+                shop.buy();
+            }
+        };
+        t1.start();
+        t2.start();
+    }
+}
+
+class Shop {
+    public synchronized void buy () {
+        try {
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName()+"：正在挑衣服");
+            Thread.sleep(5000);
+            System.out.println(t.getName()+"：正在试衣服");
+            Thread.sleep(5000);
+            System.out.println("结算离开");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+}
+```
+控制台输出：
+```
+Thread-0：正在挑衣服
+Thread-0：正在试衣服
+结算离开
+Thread-1：正在挑衣服
+Thread-1：正在试衣服
+结算离开
+```
+### 使用同步块
+只在真正需要同步的地方，上锁。
+```java
+package thread;
+
+public class ShoppingDemo {
+    public static void main(String[] args) {
+        Shop shop = new Shop();
+        Thread t1 = new Thread() {
+            public void run() {
+                shop.buy();
+            }
+        };
+        Thread t2 = new Thread() {
+            public void run() {
+                shop.buy();
+            }
+        };
+        t1.start();
+        t2.start();
+    }
+}
+
+class Shop {
+    public void buy () {
+        try {
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName()+"：正在挑衣服");
+            Thread.sleep(5000);
+            synchronized(this) {
+                System.out.println(t.getName()+"：正在试衣服");
+                Thread.sleep(5000);
+            }
+            System.out.println("结算离开");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+}
+```
+控制台输出：
+```
+Thread-0：正在挑衣服
+Thread-1：正在挑衣服
+Thread-0：正在试衣服
+结算离开
+Thread-1：正在试衣服
+结算离开
+```
+这就很 Nice~
 
 
+### 对象锁
+Java 每个对象都有一个内置锁。
+需要同步的两个线程，确保对应的是同一个对象锁。
+以下代码无法达到同步效果。
+```java
+synchronized (new Object()) {
+    
+}
+```
+相当于两个试衣间。
+
+## 类锁
+Synchronized修饰静态方法，实际上是对类对象上锁。
+
+```java
+package thread;
+
+public class SynchronizedStaticMethodDemo {
+    public static void main(String[] args) {
+        Thread t1 = new Thread() {
+            public void run() {
+                Foo.dosome();
+            }
+        };
+        Thread t2 = new Thread() {
+            public void run() {
+                Foo.dosome();
+            }
+        };
+        t1.start();
+        t2.start();
+    }
+}
+
+class Foo {
+    public synchronized static void dosome() {
+        try {
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName() + "：正在执行");
+            Thread.sleep(5000);
+            System.out.println(t.getName() + "：完成执行");
+        } catch (Exception e) {
+            
+        }
+    }
+}
+```
+控制台输出：
+```
+Thread-0：正在执行
+Thread-0：完成执行
+Thread-1：正在执行
+Thread-1：完成执行
+
+```
+
+### 也可以使用同步块指定类锁
+```java
+package thread;
+
+public class SynchronizedStaticMethodDemo {
+    public static void main(String[] args) {
+        Thread t1 = new Thread() {
+            public void run() {
+                Foo.dosome();
+            }
+        };
+        Thread t2 = new Thread() {
+            public void run() {
+                Foo.dosome();
+            }
+        };
+        t1.start();
+        t2.start();
+    }
+}
+
+class Foo {
+    public static void dosome() {
+        try {
+            synchronized(Foo.class) {
+                Thread t = Thread.currentThread();
+                System.out.println(t.getName() + "：正在执行");
+                Thread.sleep(5000);
+                System.out.println(t.getName() + "：完成执行");
+            }
+        } catch (Exception e) {
+            
+        }
+    }
+}
+```
+效果是一样的。
+```
+Thread-0：正在执行
+Thread-0：完成执行
+Thread-1：正在执行
+Thread-1：完成执行
+
+```
+
+# 互斥与同步
+- 互斥：同一时刻，只允许一个线程对临界资源进行访问。
+    - A 线程对临界资源进行操作时，B 线程必须等待。 
+- 同步：同步是在互斥的基础上，实现进程间的有序访问。
+    - A 线程对读的时候，B 线程不能写。
+```java
+package thread;
+
+public class HuChiDemo {
+    public static void main(String[] args) {
+        File file = new File();
+        Thread t1 = new Thread() {
+            public void run() {
+                file.read();
+            }
+        };
+        
+        Thread t2 = new Thread() {
+            public void run() {
+                file.write();
+            }
+        };
+        t1.start();
+        t2.start();
+    }
+}
 
 
+class File {
+    public synchronized void read() {
+        try {
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName()+": reading......");
+            Thread.sleep(5000);
+            System.out.println(t.getName()+": Done!");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+    public synchronized void write() {
+        try {
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName()+": writing......");
+            Thread.sleep(5000);
+            System.out.println(t.getName()+": Done!");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+}
+```
+控制台输出：
+```
+Thread-0: reading......
+Thread-0: Done!
+Thread-1: writing......
+Thread-1: Done!
 
-
-
-
-
-
-
-
-
+```
+上面示例中的 read() 方法 和 write() 方法就是互斥的关系。读的时候不应当写，写的时候不应当读。他俩对应到同一个对象锁。
