@@ -11,16 +11,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class Server {
 	private ServerSocket serverSocket;
 	
 	// 用来向多个客户端转发消息
-	private PrintWriter[] allOut = {};
+	private Collection<PrintWriter> allOut = new ArrayList<>();
 	
 	
 	
@@ -77,24 +78,25 @@ public class Server {
 				OutputStream out = socket.getOutputStream();
 				pw = new PrintWriter(out, true); // <---
 				
-				// 获取输入流
-				InputStream in = socket.getInputStream();
-				InputStreamReader isr = new InputStreamReader(in, "UTF-8");
-				BufferedReader br = new BufferedReader(isr);
-				
+
 				synchronized(allOut) {
-					// 将 printWriter 添加到数组中
-					// 1. 扩容
-					allOut = Arrays.copyOf(allOut, allOut.length+1);
-					// 2. 赋值
-					allOut[allOut.length-1] = pw;
+//					// 将 printWriter 添加到数组中
+//					// 1. 扩容
+//					allOut = Arrays.copyOf(allOut, allOut.length+1);
+//					// 2. 赋值
+//					allOut[allOut.length-1] = pw;
+					allOut.add(pw);
 					
 				}
 			
 				// 显示连接到服务器的新客户端，显示当前在线人数
-				System.out.println(host + " 上线了，当前在线人数：" + allOut.length);
+				System.out.println(host + " 上线了，当前在线人数：" + allOut.size());
 				
 				
+				// 获取输入流
+				InputStream in = socket.getInputStream();
+				InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+				BufferedReader br = new BufferedReader(isr);
 				
 				
 				// 读取对应客户端的消息，向每一个客户端转发消息。
@@ -113,7 +115,7 @@ public class Server {
 				synchronized(allOut) {					
 					remove(pw);
 				}
-				System.out.println(host + " 下线了，当前在线人数：" + allOut.length);
+				System.out.println(host + " 下线了，当前在线人数：" + allOut.size());
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -123,12 +125,13 @@ public class Server {
 		}
 		
 		private void remove(PrintWriter printWriter) {
-			for (int i = 0; i < allOut.length; i++) {
-				if (printWriter.equals(allOut[i])) {
-					allOut[allOut.length-1] = allOut[i];
-				}
-			}
-			allOut = Arrays.copyOf(allOut, allOut.length-1);
+//			for (int i = 0; i < allOut.length; i++) {
+//				if (printWriter.equals(allOut[i])) {
+//					allOut[allOut.length-1] = allOut[i];
+//				}
+//			}
+//			allOut = Arrays.copyOf(allOut, allOut.length-1);
+			allOut.remove(printWriter);
 		}
 	}
 	

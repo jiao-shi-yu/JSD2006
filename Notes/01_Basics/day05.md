@@ -73,9 +73,31 @@ do {
 ```java
 
 ```
-### for 循环
-### foreach 循环
 
+### For Loop
+for循环
+
+### Enhanced For Loop 
+增强型 for 循环，是 JDK 5 退出的，通常用于遍历集合或数组。
+```java
+package day05;
+
+public class EnhancedForLoopDemo {
+    public static void main(String[] args) {
+        String[] array = {"Three", "Two", "One", "Ready~", "Go!"};
+        for (String str : array) {
+            System.out.println(str);
+        }
+    }
+}
+/**Output:
+Three
+Two
+One
+Ready~
+Go!
+*/
+```
 ## 循环结束的情况有两种
 - 循环条件为假
 - 碰到 break 语句

@@ -110,7 +110,7 @@ toString()方法是 Object 类中的重要方法，用于返回对象值的字�
 
 
 # 包装类
-包装类是为了解决基本类型不能直接参与面向对象开发的问题而出现的。
+包装类为基本类型添加了面向对象的功能。
 
 - 在进行类型转换的范畴内，有一种搞特殊的转换，需要将 int 这样的基本数据类型转换为对象；
 - 所有基本类型都有一个与之对应的类，即包装类(Wrapper)
@@ -128,7 +128,7 @@ toString()方法是 Object 类中的重要方法，用于返回对象值的字�
 |char|java.lang.Character|java.lang.Object|
 |boolean|java.lang.Boolean|java.lang.Object|
 
-
+数字类型有一个统一的包装类 Number. 布尔和字符的包装类则直接继承自 Object。
 
 ## Number 及其主要方法
 - 抽象类 Number 是 Byte、Short、Integer、Long、Float、Double 的父类；
