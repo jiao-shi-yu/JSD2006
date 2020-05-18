@@ -235,7 +235,6 @@ public class ToArrayDemo {
 ```java
 package collection.list;
 
-
 import java.util.Arrays;
 import java.util.List;
 
