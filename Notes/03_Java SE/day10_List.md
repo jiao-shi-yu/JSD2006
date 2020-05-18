@@ -235,6 +235,7 @@ public class ToArrayDemo {
 ```java
 package collection.list;
 
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -248,8 +249,10 @@ public class ArraysAsListDemo {
         list.set(0, "1");
         System.out.println(list);
         System.out.println(Arrays.toString(array));     
+        list.add("five");
     }
 }
+
 ```
 控制台输出：
 ```java
@@ -264,7 +267,17 @@ public class ArraysAsListDemo {
 
 - 所以不能 add() , 那样就变成一个新数组了。
 
+```
+[one, two, three, four]
+[one, two, three, four]
+[1, two, three, four]
+[1, two, three, four]
+Exception in thread "main" java.lang.UnsupportedOperationException
+    at java.util.AbstractList.add(AbstractList.java:148)
+    at java.util.AbstractList.add(AbstractList.java:108)
+    at collection.list.ArraysAsListDemo.main(ArraysAsListDemo.java:17)
 
+```
 
 
 

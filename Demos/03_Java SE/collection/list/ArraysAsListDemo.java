@@ -14,5 +14,6 @@ public class ArraysAsListDemo {
 		list.set(0, "1");
 		System.out.println(list);
 		System.out.println(Arrays.toString(array));		
+		list.add("five");
 	}
 }
