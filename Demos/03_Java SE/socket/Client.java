@@ -5,7 +5,11 @@ package socket;
  *
  */
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -34,6 +38,10 @@ public class Client {
 	 */
 	public void start() {
 		try {
+			ServerHandler handler = new ServerHandler();
+			Thread t = new Thread(handler);
+			t.start();
+			
 			OutputStream out = socket.getOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(out, "UTF-8");
 			BufferedWriter bw = new BufferedWriter(osw);
@@ -48,8 +56,39 @@ public class Client {
 			// TODO: handle exception
 		}
 	}
+	
 	public static void main(String[] args) {
 		Client client = new Client();
 		client.start();
 	}
+	
+	
+	
+	private class ServerHandler implements Runnable {
+		public void run() {
+			// 获取输入流，以读取服务端发送过来的消息。
+			try {
+				InputStream in = socket.getInputStream();
+				InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+				BufferedReader br = new BufferedReader(isr);
+				
+				// 一直读取服务器的消息
+				String line = null;
+				while ((line = br.readLine())!=null) {
+					System.out.println(line);
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 }

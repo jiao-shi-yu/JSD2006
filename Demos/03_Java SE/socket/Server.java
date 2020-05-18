@@ -6,10 +6,12 @@ package socket;
  */
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -18,7 +20,7 @@ public class Server {
 	private ServerSocket serverSocket;
 	
 	// 用来向多个客户端转发消息
-	private PrintWriter[] allOut;
+	private PrintWriter[] allOut = {};
 	
 	
 	
@@ -62,35 +64,71 @@ public class Server {
 	
 	class ClientHandler implements Runnable {
 		private Socket socket;
+		private String host;
 		public ClientHandler(Socket socket) {
 			this.socket = socket;
+			host = socket.getInetAddress().getHostAddress();
 		}
 		public void run() {
+			PrintWriter pw = null;
 			try {
 				
+				// 获取输出流
+				OutputStream out = socket.getOutputStream();
+				pw = new PrintWriter(out, true); // <---
+				
+				// 获取输入流
 				InputStream in = socket.getInputStream();
 				InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 				BufferedReader br = new BufferedReader(isr);
 				
-				// 获取输出流
-				OutputStream out = socket.getOutputStream();
-				PrintWriter pw = new PrintWriter(out);
+				synchronized(allOut) {
+					// 将 printWriter 添加到数组中
+					// 1. 扩容
+					allOut = Arrays.copyOf(allOut, allOut.length+1);
+					// 2. 赋值
+					allOut[allOut.length-1] = pw;
+					
+				}
+			
+				// 显示连接到服务器的新客户端，显示当前在线人数
+				System.out.println(host + " 上线了，当前在线人数：" + allOut.length);
 				
-				// 将 printWriter 添加到数组中
-				// 1. 扩容
-				allOut = Arrays.copyOf(allOut, allOut.length+1);
-				// 2. 赋值
-				allOut[allOut.length-1] = pw;
 				
+				
+				
+				// 读取对应客户端的消息，向每一个客户端转发消息。
 				String message = null;
 				while((message = br.readLine()) != null) {
-					for (PrintWriter writer: allOut) {
-						writer.println(message);
+					System.out.println(host + ": "  + message);
+					synchronized(allOut) {
+						for (PrintWriter writer: allOut) {
+							writer.println(host + ": "  + message);
+						}
 					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				synchronized(allOut) {					
+					remove(pw);
+				}
+				System.out.println(host + " 下线了，当前在线人数：" + allOut.length);
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+		}
+		
+		private void remove(PrintWriter printWriter) {
+			for (int i = 0; i < allOut.length; i++) {
+				if (printWriter.equals(allOut[i])) {
+					allOut[allOut.length-1] = allOut[i];
+				}
 			}
+			allOut = Arrays.copyOf(allOut, allOut.length-1);
 		}
 	}
 	

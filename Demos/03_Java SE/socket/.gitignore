@@ -1,3 +1,5 @@
 /Client.class
 /Server.class
 /Server$ClientHandler.class
+/Client$ServerHandler.class
+/Demo.class
