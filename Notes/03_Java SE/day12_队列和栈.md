@@ -100,5 +100,40 @@ pollLast: three
 
 ## 常用方法
 - `void push()`: 压栈，等效于`void addFirst()`，跟`boolean offerFirst()`差不多。
-- `E pop()`: 弹栈，等效于`void removeFirst()`， 跟`E pollFisrt()`差不多。 如果是一个空栈，pop()报错，而 pollFirst() 不会报错。
+- `E pop()`: 弹栈，等效于`void removeFirst()`， 跟`E pollFisrt()`差不多。 如果是一个空栈，pop()报错，而 pollFirst()会得到一个 null, 不会报错。
+
+```java
+public class StackDemo {
+    public static void main(String[] args) {
+        Deque<String> stack = new LinkedList<>();
+        stack.push("one");
+        stack.push("two");
+        stack.push("three");
+        stack.push("four");
+        stack.push("five");
+        System.out.println(stack);
+        while(stack.size()>0) {
+            System.out.println(stack.pop());
+        }
+        System.out.println(stack.pollFirst());
+        stack.pop();
+    }
+}
+```
+```
+[five, four, three, two, one]
+five
+four
+three
+two
+one
+null
+Exception in thread "main" java.util.NoSuchElementException
+    at java.util.LinkedList.removeFirst(LinkedList.java:270)
+    at java.util.LinkedList.pop(LinkedList.java:801)
+    at collection.stack.StackDemo.main(StackDemo.java:19)
+```
+
+
+
 
