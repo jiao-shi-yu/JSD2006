@@ -3,6 +3,8 @@ package com.webserver.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 一个请求分为三部分：
@@ -18,36 +20,12 @@ public class HttpRequest {
 	 */
 	private String method;
 	private String uri;
-	public String getMethod() {
-		return method;
-	}
-
-	public void setMethod(String method) {
-		this.method = method;
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
-	public String getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(String protocol) {
-		this.protocol = protocol;
-	}
-
 	private String protocol;
 	
 	/*
 	 * 消息头相关信息
 	 */
-	
+	private Map<String, String> headers = new HashMap<>();
 	/*
 	 * 消息正文相关信息
 	 */
@@ -109,6 +87,20 @@ public class HttpRequest {
 	 */
 	private void parseHeaders() {
 		System.out.println("开始解析消息头");
+		try {
+			
+			while(true) {
+				String line = readLine();
+				if ("".equals(line)) {
+					break;
+				}
+				String[] data = line.split(": ");
+				headers.put(data[0], data[1]);
+			}
+			System.out.println("headers: " + headers);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println("完成解析消息头\n");
 	}
 	
@@ -143,9 +135,23 @@ public class HttpRequest {
 		}
 		return builder.toString().trim();
 	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
 	
 	
-	
+	public String getHeader(String name) {
+		return headers.get(name);
+	}
 	
 	
 	
