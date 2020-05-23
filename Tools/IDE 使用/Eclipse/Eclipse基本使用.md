@@ -10,3 +10,5 @@ Mac OS下，sublime Text中，用Markdown语法创建表格的最佳打开方式
 # 更改项目的编译版本
 
 项目右键 --> Java Compiler --> Compiler Compliance Level: 1.8
+
+# 控制台输出的异常信息可以点击，一步步地排除错误

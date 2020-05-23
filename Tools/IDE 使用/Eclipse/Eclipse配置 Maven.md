@@ -10,9 +10,10 @@
 1. 添加 Maven
     Preferences -> Maven -> Installations -> Add 你的安装路径 -> 应用并关闭
 
-2. 配置 Maven
+2. 配置 settings.xml
     Preferences -> Maven -> User Settings -> 安装路径/conf/settings.xml -> 应用并关闭
 
+3.  项目右键 --> Maven --> 更新 Maven 工程。
 
 
 # 配置阿里云镜像仓库

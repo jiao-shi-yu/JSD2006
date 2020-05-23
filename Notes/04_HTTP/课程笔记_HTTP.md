@@ -100,7 +100,7 @@ Content-Length: 2546(CRLF)
 ```
 
 - `Content-Type: text/html`： 告诉浏览器响应正文中的内容是什么类型。
-- `Content-Size: 2546`: 告诉浏览器响应正文的大小。
+- `Content-Length: 2546`: 告诉浏览器响应正文的大小。
 - 浏览器根据响应头中的这两个信息，显示给用户看。
 
 

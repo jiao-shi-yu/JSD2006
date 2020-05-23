@@ -6,6 +6,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.webserver.http.HttpContext.CR;
+import static com.webserver.http.HttpContext.LF;
+
 /**
  * 一个请求分为三部分：
  * 请求行
@@ -19,9 +22,25 @@ public class HttpRequest {
 	 * 请求行相关信息
 	 */
 	private String method;
-	private String uri;
+	private String url;
 	private String protocol;
 	
+	// url 进一步细分, 请求部分，参数部分，参数名-参数值键值对
+	private String requestURI;
+	private String queryString;
+	Map<String, String> parameters = new HashMap<>();
+	
+	public String getRequestURI() {
+		return requestURI;
+	}
+
+	public String getQueryString() {
+		return queryString;
+	}
+	
+	public String getParameter(String name) {
+		return parameters.get(name);
+	}
 	/*
 	 * 消息头相关信息
 	 */
@@ -43,16 +62,17 @@ public class HttpRequest {
 	public HttpRequest(Socket socket) {
 		this.socket = socket;
 		try {
-			this.in = this.socket.getInputStream();
+			this.in = socket.getInputStream();
 			parseRequestLine();
+			parseHeaders();
+			parseContent();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// 通过输入流获取到的文本，经过解析，解析为请求行、消息头、消息正文三部分，
 		// 赋值给属性，封装到 HttpRequest 对象中。
 		
-		parseHeaders();
-		parseContent();
+		
 	}
 	
 	/**
@@ -69,19 +89,50 @@ public class HttpRequest {
 			System.out.println(line);
 			String[] arr = line.split("\\s");
 			this.method = arr[0];
-			this.uri = arr[1];
+			this.url = arr[1];
 			this.protocol = arr[2];
+			/*
+			 * 进一步解析 URL
+			 */
+			parseURL();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (EmptyRequestException e) {
+			throw e;
 		}
 		
 		System.out.println("method: " + method);
-		System.out.println("url: " + uri);
+		System.out.println("url: " + url);
 		System.out.println("protocol: " + protocol);
 		
 		System.out.println("完成解析请求行\n");
 	}
+	/**
+	 * 对 URL 进一步解析
+	 */
+	private void parseURL() {
+		System.out.println("进一步解析抽象路径");
+		if (url.contains("?")) {
+			String[] data = url.split("\\?");
+			requestURI = data[0];
+			queryString = data[1];
+			String[] pairs = queryString.split("&");
+			for (String pair : pairs) {
+				String[] nameCommaValue = pair.split("=");
+				String name = nameCommaValue[0];
+				String value = nameCommaValue[1];
+				parameters.put(name, value);
+			}
+		} else {
+			requestURI = url;
+		}
+		System.out.println("requestURI: " + getRequestURI());
+		System.out.println("paremeters: " + this.parameters);
+		System.out.println("完成  解析抽象路径");
+	}
 	
+
 	/**
 	 * 解析消息头
 	 */
@@ -128,7 +179,7 @@ public class HttpRequest {
 			 * 要确保 builder.length() - 1 >= 0
 			 */
 		
-			if(builder.length()!=0&&builder.charAt(builder.length()-1)==13&&chr==10) {
+			if(builder.length()!=0&&builder.charAt(builder.length()-1)==CR&&chr==LF) {
 				break;
 			}
 			builder.append(chr);
@@ -140,8 +191,8 @@ public class HttpRequest {
 		return method;
 	}
 
-	public String getUri() {
-		return uri;
+	public String getUrl() {
+		return url;
 	}
 
 	public String getProtocol() {

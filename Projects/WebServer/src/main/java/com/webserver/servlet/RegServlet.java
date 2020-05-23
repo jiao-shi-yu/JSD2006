@@ -1,0 +1,82 @@
+package com.webserver.servlet;
+
+import java.io.File;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
+
+import com.webserver.http.HttpRequest;
+import com.webserver.http.HttpResponse;
+
+public class RegServlet {
+	public void service(HttpRequest request, HttpResponse response) {
+		System.out.println("\nRegServlet: 开始处理用户的注册请求");
+		
+		// 1. 获取注册信息
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String nickname = request.getParameter("nickname");
+		int age = Integer.parseInt(request.getParameter("age"));
+		
+		
+		System.out.println(">----------> username: " + username);
+		
+		
+		
+	
+		try (RandomAccessFile raf = new RandomAccessFile("user.dat", "rw");){
+			
+			// before 2: 判断用户名是否已经存在
+			boolean alreadyExist = false;
+			for (int i=0; i < raf.length()/100; i++) {
+				raf.seek(i*100);
+				// 读取 32 个字节，以获取用户名
+				byte[] bytes = new byte[32];
+				raf.write(bytes);
+				System.out.println("bytes: " + Arrays.toString(bytes));
+				String usernameFromFile = new String(bytes, "UTF-8")/*.trim()*/;
+				System.out.println(">----------> usernameFromFile: " + usernameFromFile);
+				if (usernameFromFile.equals(username)) {
+					alreadyExist = true;
+					break;
+				}
+			}
+			// 如果用户名已存在，跳转到 alreadyExist.html 页面
+			if (alreadyExist) {
+				// 响应 alredayExist 页面
+				File alredyExistPage = new File("./webapps/root/alreadyExist.html");
+				response.setEntity(alredyExistPage);
+				response.flush();
+			} else  { // 正常注册			
+				// 2. 存储注册信息
+				
+				// 将指针移动到文件末尾
+				raf.seek(raf.length());
+				// 写用户名
+				byte[] bytes = username.getBytes("UTF-8");
+				bytes = Arrays.copyOf(bytes, 32);
+				raf.write(bytes);
+				// 写密码
+				bytes = password.getBytes("UTF-8");
+				bytes = Arrays.copyOf(bytes, 32);
+				raf.write(bytes);
+				// 昵称
+				bytes = nickname.getBytes("UTF-8");
+				bytes = Arrays.copyOf(bytes, 32);
+				raf.write(bytes);
+				// 年龄
+				raf.writeInt(age);	
+				raf.close();
+				// 3. 响应注册结果
+				File regSucess  = new File("./webapps/root/regSuccess.html");
+				response.setEntity(regSucess);
+				response.flush();
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("RegServlet: 处理完成用户的注册请求\n");
+	}
+}
