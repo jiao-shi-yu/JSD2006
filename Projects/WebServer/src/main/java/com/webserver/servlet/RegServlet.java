@@ -31,10 +31,10 @@ public class RegServlet {
 				raf.seek(i*100);
 				// 读取 32 个字节，以获取用户名
 				byte[] bytes = new byte[32];
-				raf.write(bytes);
-				System.out.println("bytes: " + Arrays.toString(bytes));
-				String usernameFromFile = new String(bytes, "UTF-8")/*.trim()*/;
-				System.out.println(">----------> usernameFromFile: " + usernameFromFile);
+				raf.read(bytes); // <-- BUG! Fixed!
+//				System.out.println("bytes: " + Arrays.toString(bytes));
+				String usernameFromFile = new String(bytes, "UTF-8").trim();
+//				System.out.println(">----------> usernameFromFile: " + usernameFromFile);
 				if (usernameFromFile.equals(username)) {
 					alreadyExist = true;
 					break;

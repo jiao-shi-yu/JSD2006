@@ -56,8 +56,8 @@ public class HttpResponse {
         System.out.println("fileSuffix: >--------> " + extension);
         String mimeType = HttpContext.getMimeType(extension);
         // 响应正文的类型和长度
-        putHeader("Content-Type: ", mimeType);
-        putHeader("Content-Length: ", file.length() + "");
+        putHeader("Content-Type", mimeType);
+        putHeader("Content-Length", file.length() + "");
 		this.entity = file;
 	}
 	public HttpResponse(Socket socket) {
@@ -104,6 +104,7 @@ public class HttpResponse {
 			String name = header.getKey();
 			String value = header.getValue();
 			String line = name + ": " + value;
+			// System.out.println("\n\n\n\n\n ----->" + line + "\n\n\n");
 			outputStream.write(line.getBytes("ISO8859-1"));
 			writeCRLF();
 		}

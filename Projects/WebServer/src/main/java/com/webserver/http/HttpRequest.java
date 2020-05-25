@@ -1,13 +1,15 @@
 package com.webserver.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.webserver.http.HttpContext.CR;
 import static com.webserver.http.HttpContext.LF;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.Socket;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 一个请求分为三部分：
@@ -115,19 +117,34 @@ public class HttpRequest {
 		System.out.println("进一步解析抽象路径");
 		if (url.contains("?")) {
 			String[] data = url.split("\\?");
-			requestURI = data[0];
-			queryString = data[1];
-			String[] pairs = queryString.split("&");
-			for (String pair : pairs) {
-				String[] nameCommaValue = pair.split("=");
-				String name = nameCommaValue[0];
-				String value = nameCommaValue[1];
-				parameters.put(name, value);
+			if (data.length>1) {				
+				requestURI = data[0];
+				queryString = data[1];
+				
+				try {
+					System.out.println("\n\n\t解码之前："+queryString);
+					queryString = URLDecoder.decode(queryString, "UTF-8");
+					System.out.println("\n\n\t解码之后: " + queryString);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				String[] pairs = queryString.split("&");
+				for (String pair : pairs) {
+					String[] nameCommaValue = pair.split("=");
+					String name = nameCommaValue[0];
+					String value = nameCommaValue[1];
+					
+					parameters.put(name, value);
+				}
 			}
+			
 		} else {
 			requestURI = url;
 		}
 		System.out.println("requestURI: " + getRequestURI());
+		System.out.println("queryString: " + queryString);
 		System.out.println("paremeters: " + this.parameters);
 		System.out.println("完成  解析抽象路径");
 	}
