@@ -9,13 +9,15 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 import static com.webserver.http.HttpContext.CR;
 import static com.webserver.http.HttpContext.LF;
 
 public class HttpResponse {
 	private Socket socket;
 	private OutputStream outputStream;
-
+	
 	/*
 	 * 状态行相关
 	 */
@@ -60,6 +62,21 @@ public class HttpResponse {
         putHeader("Content-Length", file.length() + "");
 		this.entity = file;
 	}
+	/**
+	 * 字节数组，可以直接响应
+	 * 在 {@link #sendContent()} 响应
+	 */
+	private byte[] content;
+	
+	public byte[] getContent() {
+		return content;
+	}
+	public void setContent(byte[] content) {
+		this.content = content;
+		putHeader("Content-Length", content.length+"");
+	}
+	
+	
 	public HttpResponse(Socket socket) {
 		try {
 			this.socket = socket;
@@ -118,7 +135,13 @@ public class HttpResponse {
 	
 	// 发送响应正文
 	private void sendContent() {
-		if (entity!=null) {
+		if (content!=null) {
+			try {
+				outputStream.write(content); // content 是字节数组
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		} else if (entity!=null) {
 			try(FileInputStream fis = new FileInputStream(entity);) {
 				System.out.println("开始发送响应正文");
 				int len = -1;

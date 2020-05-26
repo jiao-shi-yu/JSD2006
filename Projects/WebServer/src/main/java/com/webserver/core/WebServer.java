@@ -2,14 +2,17 @@ package com.webserver.core;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WebServer {
 	private ServerSocket serverSocket;
-
+	private ExecutorService threadPool;
 	public WebServer() {
 		try {
 			System.out.println("正在启动服务端\n");
 			serverSocket = new ServerSocket(8088);
+			threadPool = Executors.newFixedThreadPool(50);
 			System.out.println("服务端启动完毕\n");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -26,8 +29,9 @@ public class WebServer {
 				
 				// 启动一个 handler 处理请求
 				ClientHandler handler = new ClientHandler(socket);
-				Thread handlerThread = new Thread(handler);
-				handlerThread.start();
+				threadPool.execute(handler);
+//				Thread handlerThread = new Thread(handler);
+//				handlerThread.start();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

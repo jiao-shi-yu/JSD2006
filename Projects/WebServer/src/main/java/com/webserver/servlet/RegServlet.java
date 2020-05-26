@@ -8,16 +8,27 @@ import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
 public class RegServlet {
+	
 	public void service(HttpRequest request, HttpResponse response) {
 		System.out.println("\nRegServlet: 开始处理用户的注册请求");
+		
 		
 		// 1. 获取注册信息
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String nickname = request.getParameter("nickname");
+		
+		/*判断用户输入是否合法*/
+		
+		if (username == null || password == null || nickname == null ||
+				username.contains("+") || password.contains("+") || nickname.contains("+")) {
+			File invalidArgsPage = new File("./webapps/root/invalid_args.html");
+			response.setEntity(invalidArgsPage);
+			return;
+		}
+		
 		int age = Integer.parseInt(request.getParameter("age"));
-		
-		
+
 		System.out.println(">----------> username: " + username);
 		
 		
@@ -42,10 +53,10 @@ public class RegServlet {
 			}
 			// 如果用户名已存在，跳转到 alreadyExist.html 页面
 			if (alreadyExist) {
-				// 响应 alredayExist 页面
+				// 设置 alredayExist 页面
 				File alredyExistPage = new File("./webapps/root/alreadyExist.html");
 				response.setEntity(alredyExistPage);
-				response.flush();
+	
 			} else  { // 正常注册			
 				// 2. 存储注册信息
 				
@@ -66,10 +77,10 @@ public class RegServlet {
 				// 年龄
 				raf.writeInt(age);	
 				raf.close();
-				// 3. 响应注册结果
+				// 3. 设置响应
 				File regSucess  = new File("./webapps/root/regSuccess.html");
 				response.setEntity(regSucess);
-				response.flush();
+				
 			}
 			
 			
@@ -79,4 +90,5 @@ public class RegServlet {
 		
 		System.out.println("RegServlet: 处理完成用户的注册请求\n");
 	}
+	
 }

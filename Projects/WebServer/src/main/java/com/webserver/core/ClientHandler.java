@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
-
-import com.webserver.http.HttpContext;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
+import com.webserver.servlet.CreateQRServlet;
+import com.webserver.servlet.LoginServlet;
 import com.webserver.servlet.RegServlet;
+import com.webserver.servlet.UserListServlet;
 
 public class ClientHandler implements Runnable {
 	private Socket socket;
@@ -31,6 +32,16 @@ public class ClientHandler implements Runnable {
 	        	System.out.println("--------> 请求注册业务 <--------");
 	        	RegServlet regServlet = new RegServlet();
 	        	regServlet.service(request, response);
+	        } else if ("/myweb/login".equals(path)) {
+	        	System.out.println("--------> 请求登录业务 <--------");
+	        	LoginServlet loginServlet = new LoginServlet();
+	        	loginServlet.service(request, response);
+	        } else if ("/myweb/createQR".equals(path)) {
+	        	CreateQRServlet qrServlet = new CreateQRServlet();
+	        	qrServlet.service(request, response);
+	        } else if ("/myweb/UserList".equals(path)) {
+	        	UserListServlet userListServlet = new UserListServlet();
+	        	userListServlet.service(request, response);
 	        } else { // 请求静态资源
 		      
 		        File file = new File("./webapps" + path);
@@ -51,13 +62,13 @@ public class ClientHandler implements Runnable {
 		            File notFoundPage = new File("webapps/root/404.html");
 		            response.setEntity(notFoundPage);
 		        }
-		        // 3. 响应客户端
-		        response.flush();
+		       
 	        }
 	        
+	        // 3. 响应客户端
+	        response.flush();
+
 	        
-
-
 	    } catch (Exception e) {
 	    } finally {
 	    	// 最终和客户端断开连接

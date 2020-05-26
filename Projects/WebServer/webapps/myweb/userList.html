@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户列表</title>
+<style type="text/css">
+body {
+	text-align: center;
+}
+
+table {
+	margin: 0 auto;
+	width: 250px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	border-spacing: 1;
+}
+</style>
+</head>
+<body>
+	<h1>用户列表</h1>
+	<table>
+		<tr>
+			<th>用户名</th>
+			<th>密码</th>
+			<th>昵称</th>
+			<th>年龄</th>
+		</tr>
+		<tr th:each="user:${users}">
+			<td th:text="${user.username}">张三</td>
+			<td th:text="${user.password}">123</td>
+			<td th:text="${user.nickname}">阿三</td>
+			<td th:text="${user.age}">11</td>
+		</tr>
+		<tr th:remove="all">
+			<td>赵四</td>
+			<td>1111</td>
+			<td>尼古拉斯·赵四</td>
+			<td>55</td>
+		</tr>
+	</table>
+</body>
+</html>
