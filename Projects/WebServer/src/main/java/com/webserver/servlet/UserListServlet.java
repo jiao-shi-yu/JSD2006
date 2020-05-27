@@ -14,7 +14,7 @@ import com.webserver.http.HttpContext;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
-public class UserListServlet {
+public class UserListServlet extends HttpServlet {
 	public void service(HttpRequest request, HttpResponse response) {
 		
 		System.out.println("UserListServlet: 开始显示所有用户");

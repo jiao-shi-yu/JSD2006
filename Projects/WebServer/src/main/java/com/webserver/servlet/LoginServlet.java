@@ -6,7 +6,7 @@ import java.io.RandomAccessFile;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
-public class LoginServlet {
+public class LoginServlet extends HttpServlet {
 	
 	public void service(HttpRequest request, HttpResponse response) {
 		String username = request.getParameter("username");

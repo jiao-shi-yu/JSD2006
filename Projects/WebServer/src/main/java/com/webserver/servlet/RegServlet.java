@@ -7,7 +7,7 @@ import java.util.Arrays;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
-public class RegServlet {
+public class RegServlet extends HttpServlet {
 	
 	public void service(HttpRequest request, HttpResponse response) {
 		System.out.println("\nRegServlet: 开始处理用户的注册请求");

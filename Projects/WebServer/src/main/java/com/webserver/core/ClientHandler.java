@@ -6,10 +6,8 @@ import java.net.Socket;
 
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
-import com.webserver.servlet.CreateQRServlet;
-import com.webserver.servlet.LoginServlet;
-import com.webserver.servlet.RegServlet;
-import com.webserver.servlet.UserListServlet;
+import com.webserver.servlet.HttpServlet;
+import com.webserver.servlet.ServerContext;
 
 public class ClientHandler implements Runnable {
 	private Socket socket;
@@ -27,21 +25,11 @@ public class ClientHandler implements Runnable {
 	        String path = request.getRequestURI();
 	        System.out.println("-------------> path: " + path);
 	        
+	        HttpServlet servlet = ServerContext.getServlet(path);
+	        
 	        // 判断请求的是否为一个业务
-	        if ("/myweb/reg".equals(path)) { // 注册业务
-	        	System.out.println("--------> 请求注册业务 <--------");
-	        	RegServlet regServlet = new RegServlet();
-	        	regServlet.service(request, response);
-	        } else if ("/myweb/login".equals(path)) {
-	        	System.out.println("--------> 请求登录业务 <--------");
-	        	LoginServlet loginServlet = new LoginServlet();
-	        	loginServlet.service(request, response);
-	        } else if ("/myweb/createQR".equals(path)) {
-	        	CreateQRServlet qrServlet = new CreateQRServlet();
-	        	qrServlet.service(request, response);
-	        } else if ("/myweb/UserList".equals(path)) {
-	        	UserListServlet userListServlet = new UserListServlet();
-	        	userListServlet.service(request, response);
+	        if (servlet != null) { // 注册业务
+	        	servlet.service(request, response);
 	        } else { // 请求静态资源
 		      
 		        File file = new File("./webapps" + path);

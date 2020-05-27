@@ -8,7 +8,7 @@ import com.webserver.http.HttpResponse;
 
 import qrcode.QRCodeUtil;
 
-public class CreateQRServlet {
+public class CreateQRServlet extends HttpServlet {
 	public void service(HttpRequest request, HttpResponse response) {
 		System.out.println("开始生成二维码");
 		String content = request.getParameter("content");
