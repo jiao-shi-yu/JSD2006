@@ -218,6 +218,24 @@ person:大家好我是:李四, 我今年44
 ```
 
 
+## 利用反射，调用对象的**私有方法**。
+需要用到`Method`的`void setAccessiable(true)`:设置可访问性。
+```java
+public class ReflectionDemo6 {
+    public static void main(String[] args) throws Exception {
+        Class<?> clas = Class.forName("Person");
+        Object o = clas.newInstance();
+        Method m = clas.getMethod("dosome");
+        m.setAccessible(true);
+        m.invoke(o);
+    }
+}
+```
+控制台输出：
+```
+我是Person的私有方法 dosome()!
+```
+
 
 
 

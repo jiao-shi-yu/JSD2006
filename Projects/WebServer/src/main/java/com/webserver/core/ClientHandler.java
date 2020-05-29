@@ -26,12 +26,12 @@ public class ClientHandler implements Runnable {
 	        System.out.println("-------------> path: " + path);
 	        
 	        HttpServlet servlet = ServerContext.getServlet(path);
-	        
+	        System.out.println("servlet: " + servlet);
 	        // 判断请求的是否为一个业务
 	        if (servlet != null) { // 注册业务
 	        	servlet.service(request, response);
 	        } else { // 请求静态资源
-		      
+	        	
 		        File file = new File("./webapps" + path);
 		        if (file.exists()) {
 		            System.out.println("该资源已经找");

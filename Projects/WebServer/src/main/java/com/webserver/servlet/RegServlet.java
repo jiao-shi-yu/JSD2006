@@ -54,8 +54,7 @@ public class RegServlet extends HttpServlet {
 			// 如果用户名已存在，跳转到 alreadyExist.html 页面
 			if (alreadyExist) {
 				// 设置 alredayExist 页面
-				File alredyExistPage = new File("./webapps/root/alreadyExist.html");
-				response.setEntity(alredyExistPage);
+				forward("./webapps/root/alreadyExist.html", request, response);
 	
 			} else  { // 正常注册			
 				// 2. 存储注册信息
@@ -78,8 +77,8 @@ public class RegServlet extends HttpServlet {
 				raf.writeInt(age);	
 				raf.close();
 				// 3. 设置响应
-				File regSucess  = new File("./webapps/root/regSuccess.html");
-				response.setEntity(regSucess);
+				forward("./webapps/root/regSuccess.html", request, response);
+				
 				
 			}
 			

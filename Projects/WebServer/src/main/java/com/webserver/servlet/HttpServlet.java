@@ -1,5 +1,7 @@
 package com.webserver.servlet;
 
+import java.io.File;
+
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
@@ -16,7 +18,8 @@ public abstract class HttpServlet {
 	 * @param request
 	 * @param response
 	 */
-	public void forward(String path, HttpRequest request, HttpResponse response) {
-		
+	void forward(String path, HttpRequest request, HttpResponse response) {
+		File file = new File(path);
+		response.setEntity(file);
 	}
 }

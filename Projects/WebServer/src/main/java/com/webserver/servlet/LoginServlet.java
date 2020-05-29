@@ -1,6 +1,5 @@
 package com.webserver.servlet;
 
-import java.io.File;
 import java.io.RandomAccessFile;
 
 import com.webserver.http.HttpRequest;
@@ -16,8 +15,8 @@ public class LoginServlet extends HttpServlet {
 		
 		if (username == null || password == null  ||
 				username.contains("+") || password.contains("+")) {
-			File invalidArgsPage = new File("./webapps/root/invalid_args.html");
-			response.setEntity(invalidArgsPage);
+			String filePath = "./webapps/root/invalid_args.html";
+			forward(filePath, request, response);
 			return;
 		}
 		try (RandomAccessFile raf = new RandomAccessFile("user.dat", "r")){
@@ -33,15 +32,16 @@ public class LoginServlet extends HttpServlet {
 					if (passwordFromFile.equals(password)) {
 						// 登录成功，响应页面
 						System.out.println("\n\n\t >---> 登录成功 <---<\n\n");
-						File loginSucceedPage = new File("./webapps/root/login_succeed.html");
-						response.setEntity(loginSucceedPage);
+						String filePath = "./webapps/root/login_succeed.html";
+						forward(filePath, request, response);
 						return;
 					}
 					break;
 				}
 			}
-			File loginFailedPage = new File("./webapps/root/login_failed.html");
-			response.setEntity(loginFailedPage);
+			String filePath = "./webapps/root/login_failed.html";
+			forward(filePath, request, response);
+			
 		
 		} catch (Exception e) {
 		}
