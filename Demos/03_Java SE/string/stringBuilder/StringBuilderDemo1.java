@@ -12,7 +12,7 @@ public class StringBuilderDemo1 {
 //		StringBuilder builder = new StringBuilder();
 		StringBuilder builder = new StringBuilder(str);
 		System.out.println(builder);
-		
+		// StringBuilder sb = "abc"; XXXX <-
 		/**
 		 * 增
 		 * append()方法：在字符串末尾追加内容

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        /*后代选择器*/
+        body div span {
+            color: red;
+        }
+        /*子代选择器*/
+        body>div>div>span {
+            color: green;
+        }
+        body>div>div>div>span {
+            color: blue;
+        }
+        /* 访问、未访问*/
+        a:link {
+            color: darkcyan;
+        }
+        a:visited {
+            color: gray;
+        }
+        /* 鼠标悬停、点击*/
+        /* 伪类选择器 */
+        a:hover {
+            background-color: yellow;
+        }
+        a:active {
+            background-color: hotpink;
+        }
+    </style>
+</head>
+<body>
+    <a href="../imgs/1.jpg">超链接1</a>
+    <a href="../imgs/2.jpg">超连接2</a>
+    <a href="../imgs/3.jpg">超链接3</a>
+    <a href="../imgs/4.jpg">超链接4</a>
+    <hr>
+    <span>span1</span>
+    <div>
+        <span>span2</span>
+        <div>
+            <span>span3</span>
+        </div>
+        <div>
+            <span>span4</span>
+            <div>
+                <span>span5</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

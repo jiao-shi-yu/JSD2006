@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="http:www.tmooc.cn" method="get">
+        <input type="text" name="username" value="小明"
+               placeholder="请输入用户名" maxlength="5" readonly/>
+        <input type="password" name="password" placeholder="请输入密码">
+        <br/>
+        性别：
+        <input type="radio" name="gender" value="m" id="m"/>
+        <label for="m">男</label>
+        <input type="radio" name="gender" value="f" id="f"/>
+        <label for="f">女</label>
+        <br/>
+        兴趣爱好：
+        <input type="checkbox" name="hobby" value="cy"/>抽烟
+        <input type="checkbox" name="hobby" value="hj"/>喝酒
+        <input type="checkbox" name="hobby" value="tt" checked/>烫头
+        <br/>
+        生日：
+        <input type="date" name="birthday">
+        <br/>
+        靓照：
+        <input type="file" accept="images/*" name="pic" value="选择图片">
+        <br/>
+        自我介绍:
+        <textarea name="intro" rows="4" cols="20" placeholder="说点儿什么..."></textarea>
+        <br/>
+        所在城市：
+        <select name="city">
+            <option value="bj">北京</option>
+            <option value="sh">上海</option>
+            <option value="sz">深圳</option>
+        </select>
+        <br/>
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>
