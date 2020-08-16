@@ -59,49 +59,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79c6279d-4e0f-4f5c-a8af-c8d5d2f3411f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/blog.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/yuyu.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/layout1.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/layout2.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/layout3.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/default.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img0.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img10.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img11.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img12.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img13.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img14.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img15.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img16.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img17.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img18.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img19.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img20.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img21.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img22.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img23.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img24.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img25.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img26.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img27.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img28.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img29.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img7.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img8.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/img9.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/th.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Tools/IDE 使用/WebStorm/快捷键.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Tools/IDE 使用/WebStorm/快捷键.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Tools/系统/系统快捷键.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Tools/系统/系统快捷键.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,6 +109,8 @@
       <option name="presentableId" value="Default" />
       <updated>1591751910076</updated>
       <workItem from="1591751912898" duration="14499000" />
+      <workItem from="1591809899008" duration="182000" />
+      <workItem from="1591877065407" duration="70000" />
     </task>
     <servers />
   </component>
@@ -167,6 +127,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
